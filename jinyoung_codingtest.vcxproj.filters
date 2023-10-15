@@ -27,5 +27,8 @@
     <ClCompile Include="11_238. Product of Array Except Self.cpp">
       <Filter>소스 파일\1</Filter>
     </ClCompile>
+    <ClCompile Include="소스.cpp">
+      <Filter>소스 파일\1</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
