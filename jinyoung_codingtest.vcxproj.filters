@@ -27,7 +27,10 @@
     <ClCompile Include="11_238. Product of Array Except Self.cpp">
       <Filter>소스 파일\1</Filter>
     </ClCompile>
-    <ClCompile Include="소스.cpp">
+    <ClCompile Include="3_937. Reorder Data in Log Files_.cpp">
+      <Filter>소스 파일\1</Filter>
+    </ClCompile>
+    <ClCompile Include="4_819. Most Common Word.cpp">
       <Filter>소스 파일\1</Filter>
     </ClCompile>
   </ItemGroup>
