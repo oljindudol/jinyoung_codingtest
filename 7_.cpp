@@ -19,11 +19,13 @@ vector<int> twoSum(vector<int>& nums, int target) {
             {
                 ret.push_back(i);
                 ret.push_back(j);
-            }
-            if (0 != ret.size())
-            {
                 break;
             }
+
+        }
+        if (0 != ret.size())
+        {
+            break;
         }
     }
 
