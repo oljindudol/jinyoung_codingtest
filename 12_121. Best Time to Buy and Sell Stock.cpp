@@ -1,23 +1,23 @@
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <map>
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if (1 == prices.size())
+            return 0;
+        int pricemin = prices[0];
+        int profitmax = 0;
 
-using namespace std;
+        for (int i = 0; i < prices.size(); ++i)
+        {
 
-int maxProfit(vector<int>& prices) {
-    int ret = 0;
+            if (pricemin > prices[i])
+            {
+                pricemin = prices[i];
+                continue;
+            }
 
-
-
-    return ret;
-
-}
-
-int main()
-{
-    vector<int> tc = { 7,1,5,3,6,4 };
-    maxProfit(tc);
-    return 0;
-}
+            if (profitmax < prices[i] - pricemin)
+                profitmax = prices[i] - pricemin;
+        }
+        return profitmax;
+    }
+};

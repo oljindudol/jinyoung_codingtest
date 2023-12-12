@@ -16,6 +16,12 @@
     <Filter Include="소스 파일\1">
       <UniqueIdentifier>{122ec65e-71a3-4d02-a4e7-617753b3a107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\2">
+      <UniqueIdentifier>{8540ba4e-48f7-40c7-a0c7-33b01524d8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\3">
+      <UniqueIdentifier>{f36a40a0-7ef4-4dca-965d-e192bc563d0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1-1_125. Valid Palindrome.cpp">
@@ -53,6 +59,39 @@
     </ClCompile>
     <ClCompile Include="12_121. Best Time to Buy and Sell Stock.cpp">
       <Filter>소스 파일\1</Filter>
+    </ClCompile>
+    <ClCompile Include="2-1.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-2.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-3.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-4.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-5.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-6.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="2-7.cpp">
+      <Filter>소스 파일\2</Filter>
+    </ClCompile>
+    <ClCompile Include="3-1.cpp">
+      <Filter>소스 파일\3</Filter>
+    </ClCompile>
+    <ClCompile Include="3-3.cpp">
+      <Filter>소스 파일\3</Filter>
+    </ClCompile>
+    <ClCompile Include="3-4.cpp">
+      <Filter>소스 파일\3</Filter>
+    </ClCompile>
+    <ClCompile Include="3-4-2.cpp">
+      <Filter>소스 파일\3</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
