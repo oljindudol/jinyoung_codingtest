@@ -305,6 +305,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="k1.cpp" />
+    <ClCompile Include="k2.cpp" />
+    <ClCompile Include="k3.cpp" />
+    <ClCompile Include="k4.cpp" />
+    <ClCompile Include="k5.cpp" />
+    <ClCompile Include="k6.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="check.h" />
