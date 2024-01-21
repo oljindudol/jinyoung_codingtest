@@ -311,6 +311,9 @@
     <ClCompile Include="k4.cpp" />
     <ClCompile Include="k5.cpp" />
     <ClCompile Include="k6.cpp" />
+    <ClCompile Include="나무자르기.cpp" />
+    <ClCompile Include="보물.cpp" />
+    <ClCompile Include="퇴사.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="check.h" />

@@ -25,6 +25,9 @@
     <Filter Include="소스 파일\4">
       <UniqueIdentifier>{7203c4d5-ff34-45e8-a7d7-ee1bd164361d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\백준1">
+      <UniqueIdentifier>{ff1f3e80-1850-4510-9398-1efaeffca70d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="1-1_125. Valid Palindrome.cpp">
@@ -137,6 +140,15 @@
     </ClCompile>
     <ClCompile Include="k6.cpp">
       <Filter>소스 파일\4</Filter>
+    </ClCompile>
+    <ClCompile Include="퇴사.cpp">
+      <Filter>소스 파일\백준1</Filter>
+    </ClCompile>
+    <ClCompile Include="나무자르기.cpp">
+      <Filter>소스 파일\백준1</Filter>
+    </ClCompile>
+    <ClCompile Include="보물.cpp">
+      <Filter>소스 파일\백준1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,11 +2,12 @@
 #include<vector>
 #include<string>
 
+
+using namespace std;
+
 int enddate;
 int maxprofit = 0;
 vector<pair<int, int>> vp;
-
-using namespace std;
 
 void dfs(int today, int profit)
 {
@@ -14,8 +15,13 @@ void dfs(int today, int profit)
 	{
 		return;
 	}
+
 	maxprofit = max(maxprofit, profit);
 
+	if (enddate == today)
+	{
+		return;
+	}
 	//오늘일 접수안함
 	dfs(today + 1, profit);
 	//오늘일 접수함
@@ -32,16 +38,13 @@ int main()
 
 	for (int i = 0; i < enddate; ++i)
 	{
-		string tmp;
-		cin >> tmp;
-		vp.push_back({stoi(tmp.substr(0, tmp.find(' '))),
-			stoi(tmp.substr(tmp.find(' ') + 1, tmp.size() - tmp.find(' ') - 1) )});
-
-
-
+		string d, p;
+		cin >> d >> p;
+		vp.push_back({ stoi(d),
+			stoi(p) });
 	}
 
-
-
+	dfs(0, 0);
+	cout << maxprofit;
 	return 0;
 }
