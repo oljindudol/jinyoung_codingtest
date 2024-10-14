@@ -13,7 +13,7 @@ public:
         
         if(nums[0] > nums[sz-1])
         {
-                    //피봇구하기
+            //피봇구하기
             while(left <= right)
             {
                 int mid = (left + right)/2;
