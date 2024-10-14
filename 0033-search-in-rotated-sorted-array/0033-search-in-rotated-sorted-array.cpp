@@ -41,7 +41,6 @@ public:
         
         
         // 값 찾기
-        cout << "pivot:"<<pivot <<endl;
         
         if(nums[sz-1] >= target )
         {
@@ -65,12 +64,10 @@ public:
             }
             if(target < nums[mid])
             {
-                cout<<"too big val:"<<nums[mid]<<" idx: "<<mid<<endl;
                 right = mid-1;
             }
             else
             {
-                cout<<"too small val:"<<nums[mid]<<"idx: "<<mid<<endl;
                 left = mid+1;
             }
         }
