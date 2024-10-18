@@ -38,8 +38,8 @@ int main()
 	vector<long long> dp(vcnt, INF);
 
 	dp[1] = 0;
-	int esz = edges.size();
-	for (int i = 0; i < esz - 1; ++i)
+	//int esz = edges.size();
+	for (int i = 0; i < vcnt - 2; ++i)
 	{
 		for (auto& e : edges)
 		{
