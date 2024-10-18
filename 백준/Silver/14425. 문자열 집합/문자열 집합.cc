@@ -6,7 +6,7 @@
 
 using namespace std;
 
-constexpr int MAXSZ = 'z' - 'a';
+constexpr int MAXSZ = 'z' - 'a' + 1;
 constexpr int MAXLEN = 501;
 
 struct Trie
