@@ -4,6 +4,7 @@
 #include <queue>
 #include <set>
 #include <math.h>
+
 using namespace std;
 
 int drow[4] = { 1,-1,0,0 };
@@ -55,7 +56,7 @@ int dfs(int row, int col)
 			continue;
 		}
 
-		visited[newrow][newcol] = 1;
+		//visited[newrow][newcol] = 1;
 		dp[row][col] = max(dp[row][col], dfs(newrow, newcol) + 1);
 		visited[newrow][newcol] = 0;
 	}
@@ -65,6 +66,9 @@ int dfs(int row, int col)
 
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+
 	cin >> n;
 	map = vector < vector<int>>(n, vector<int>(n));
 	dp = vector<vector<int>>(n, vector<int>(n, 1));
