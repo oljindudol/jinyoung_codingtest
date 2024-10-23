@@ -45,7 +45,7 @@ int main()
 
 	for (int i = 2; i < n + 1; ++i)
 	{
-		printf("%d\n", dp[i]);
+		printf("%d ", dp[i]);
 		//cout << dp[i] << endl;
 	}
 
