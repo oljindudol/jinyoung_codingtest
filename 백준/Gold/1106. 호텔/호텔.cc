@@ -1,20 +1,20 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
-#include<unordered_set>
-#include<queue>
-#include<stdio.h>
-#include<list>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <math.h>
+#include <string>
 
 using namespace std;
 
 
 
-
-
+struct city
+{
+	int w;
+	int v;
+};
 
 
 int main()
@@ -24,44 +24,41 @@ int main()
 
 	int c, n;
 
-
 	cin >> c >> n;
 
-	//cost 는 cost
-	//value 는 client
-	vector<int> cost;
-	vector<int> value;
-	vector<int> dp(100100,0);
-
-	cost.push_back(0);
-	value.push_back(0);
+	vector < city > cities(n);
 
 	for (int i = 0; i < n; ++i)
 	{
-		int co,val;
-		cin >> co >> val;
-		cost.push_back(co);
-		value.push_back(val);
+		int w, v;
+
+		cin >> w >> v;
+		cities[i] = { w,v };
 	}
 
+	vector<long long> dp(100001, 0);
 
-	for (int i = 1; i <= n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
-		for (int j = 1; j < dp.size(); ++j)
+		for (int j = cities[i].w; j < dp.size(); ++j)
 		{
-			if (j >= cost[i])
-				dp[j] = max(dp[j - cost[i]] + value[i], dp[j]);
+			int newweight = j - cities[i].w;
+
+			dp[j] = max(dp[j], dp[newweight] + cities[i].v);
 		}
 	}
 
-	for (int i = 1 ;  i<dp.size();++i)
+	for (int i = 0; i < dp.size(); ++i)
 	{
-		if (c <= dp[i])
+		if (dp[i] >= c)
 		{
 			cout << i;
 			break;
 		}
 	}
+
+
+
 
 
 	return 0;
