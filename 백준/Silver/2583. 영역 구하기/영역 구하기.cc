@@ -1,104 +1,105 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <math.h>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
 
 using namespace std;
 
-int m, n, k;
-vector<vector<bool>> v;
-vector<vector<bool>> g;
-vector<set<pair<int, int>>> vs;
+int n, m, k;
+vector<vector<int>> map;
+vector<vector<int>> visited;
+vector<int> areas;
+int tmparea;
 
+int drow[4] = { 1,-1,0,0 };
+int dcol[4] = { 0,0,-1,1 };
 
-void dfs(set<pair<int,int>>& _s,int _row,int _col)
+bool IsValid(int row, int col)
 {
-	if (_row < 0
-		||
-		_col < 0
-		||
-		_row >= m
-		||
-		_col >= n
-		||
-		true == g[_row][_col]
-		|| 
-		true == v[_row][_col]
-		)
+	if (0 > row || n <= row)
 	{
-		return;
+		return false;
 	}
-	
-	v[_row][_col] = true;
-	_s.insert({ _row, _col });
-
-	dfs(_s,_row - 1, _col);
-	dfs(_s,_row + 1, _col);
-	dfs(_s,_row, _col - 1);
-	dfs(_s,_row, _col + 1);
+	if (0 > col || m <= col)
+	{
+		return false;
+	}
+	if (1 == map[row][col])
+	{
+		return false;
+	}
+	if (1 == visited[row][col])
+	{
+		return false;
+	}
+	return true;
 }
 
+void dfs(int row, int col)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		int newrow = row + drow[i];
+		int newcol = col + dcol[i];
+		if (true == IsValid(newrow, newcol))
+		{
+			++tmparea;
+			visited[newrow][newcol] = 1;
+			dfs(newrow, newcol);
+		}
+	}
+
+}
 
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin >> n >> m >> k;
 
-	cin >> m >> n >> k;
+	map = vector<vector<int>>(n, vector<int>(m, 0));
+	visited = vector<vector<int>>(n, vector<int>(m, 0));
 
-
-	v.resize(m, vector<bool>(n, false));
-	g.resize(m, vector<bool>(n, false));
-
-
+	int rowmin, colmin, rowmax, colmax;
 	for (int i = 0; i < k; ++i)
 	{
-		int l, b, r, t;
-		cin >> b>> l>> t>> r;
-
-		for (int i = l; i < r; ++i)
+		cin >> colmin >> rowmin >> colmax >> rowmax;
+		for (int row = rowmin; row < rowmax; ++row)
 		{
-			for (int j = b; j < t; ++j)
+			for (int col = colmin; col < colmax; ++col)
 			{
-				g[i][j] = true;
-			}
-
-		}
-		
-	}
-
-	for (int i = 0; i < m; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			if (false == g[i][j]
-				&&
-				false == v[i][j])
-			{
-				set<pair<int, int>> ts;
-				dfs(ts, i, j);
-				vs.push_back(ts);
+				map[row][col] = 1;
 			}
 		}
 	}
 
-	vector<int> vsz;
-
-	for (auto& s : vs)
+	int ret = 0;
+	for (int row = 0; row < n; ++row)
 	{
-		vsz.push_back(s.size());
+		for (int col = 0; col < m; ++col)
+		{
+			if (true == IsValid(row, col))
+			{
+				++ret;
+				tmparea = 1;
+				visited[row][col] = 1;
+				dfs(row, col);
+				areas.push_back(tmparea);
+			}
+		}
 	}
 
-	sort(vsz.begin(), vsz.end());
+	sort(areas.begin(), areas.end());
 
-	cout << vsz.size() << endl;
 
-	for (auto& sz : vsz)
+	cout << ret << endl;
+	for (auto& e : areas)
 	{
-		cout << sz << ' ';
+		cout << e << " ";
 	}
 
 	return 0;
