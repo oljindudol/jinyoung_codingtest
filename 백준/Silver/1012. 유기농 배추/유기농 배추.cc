@@ -1,112 +1,87 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
-#include<unordered_set>
-#include<queue>
-#include<stdio.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <math.h>
+
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
 
 using namespace std;
 
-int cnt;
 
-vector<vector<int>> g;
-vector<vector<bool>> v;
+int n, m, k;
 
-vector<int> vrow = { 1, -1,0,0 };
-vector<int> vcol = { 0,0,-1,1 };
-int m, n;
+int drow[4] = { 1,-1,0,0 };
+int dcol[4] = { 0,0,-1,1 };
 
-vector<int> out;
-
-bool checkrow(int _row)
+bool IsValid(int row, int col, const vector<vector<int>>& map)
 {
-	if (0 > _row || m <= _row)
-		return false;
-
-	return true;
-}
-
-bool checkcol(int _col)
-{
-	if (0 > _col || n <= _col)
-		return false;
-
-	return true;
-}
-
-void dfs(int _row, int _col)
-{
-	if (!checkrow(_row) ||
-		!checkcol(_col) ||
-		0==g[_row][_col] ||
-		true == v[_row][_col]
-		)
+	if (0 > row || n <= row)
 	{
-		return;
+		return false;
 	}
-	
-	v[_row][_col] = true;
+	if (0 > col || m <= col)
+	{
+		return false;
+	}
+	if (0 == map[row][col])
+	{
+		return false;
+	}
+	return true;
+}
+
+void dfs(int row, int col, vector<vector<int>>& map)
+{
 
 	for (int i = 0; i < 4; ++i)
 	{
-		dfs(_row + vrow[i], _col + vcol[i]);
+		int newrow = row + drow[i];
+		int newcol = col + dcol[i];
+		if (true == IsValid(newrow, newcol, map))
+		{
+			map[newrow][newcol] = 0;
+			dfs(newrow, newcol, map);
+		}
 	}
 }
 
 int main()
 {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	int tcnt;
+	cin >> tcnt;
 
-	int t;
-
-	cin >> t;
-
-
-	for (int r = 0; r < t; ++r)
+	int trow, tcol;
+	for (int i = 0; i < tcnt; ++i)
 	{
+		cin >> n >> m >> k;
+		vector<vector<int>> map(n, vector<int >(m, 0));
 		int ret = 0;
 
-		int k;
-
-		cin >> m >> n >> k;
-
-		g.resize(0);
-		g.resize(m, vector<int>(n, 0));
-		v.resize(0);
-		v.resize(m, vector<bool>(n, false));
-
-
-		//배추심기
-		for (int i = 0; i < k; ++i)
+		for (int j = 0; j < k; ++j)
 		{
-			int inrow, incol;
-			cin >> inrow >> incol;
-			g[inrow][incol] = 1;
+			cin >> trow >> tcol;
+			map[trow][tcol] = 1;
 		}
 
-		//벌레
-		for (int i = 0; i < m; ++i)
+		for (int row = 0; row < n; ++row)
 		{
-			for (int j = 0; j < n; ++j)
+			for (int col = 0; col < m; ++col)
 			{
-				if (1 == g[i][j] && false == v[i][j])
+				if (true == IsValid(row, col, map))
 				{
 					++ret;
-					dfs(i, j);
+					dfs(row, col, map);
 				}
 			}
 		}
-		out.push_back(ret);
+
+		cout << ret << endl;
 	}
 
-	for (auto& o : out)
-	{
-		cout << o<<endl;
-	}
 
 	return 0;
 }
