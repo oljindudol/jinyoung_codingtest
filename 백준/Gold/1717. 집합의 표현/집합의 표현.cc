@@ -1,148 +1,77 @@
-#include <iostream>
 #include <vector>
-#include <algorithm>
-#include <queue>
-#include <set>
-#include <math.h>
 #include <string>
-#include <stdio.h>
-#include <unordered_map>
-#include <ostream>
-
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
-template <typename T>
-void PrintVec(const vector<T>& vec)
+vector<int> parent;
+vector<int> depth;
+
+struct Data
 {
-	for (const auto& e : vec)
-	{
-		cout << e << " ";
-	}
-	cout << endl;
-}
-
-template <typename T>
-void PrintVec(const vector<vector<T>>& vec)
-{
-	for (const auto& e1 : vec)
-	{
-		for (const auto& e2 : e1)
-		{
-			cout << e2 << " ";
-		}
-		cout << endl;
-	}
-	cout << endl;
-}
-
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-
-class UF
-{
-public:
-	vector<int> m_parents;
-	vector<int> m_rank;
-
-
-private:
-	UF();
-
-public:
-	UF(int n)
-	{
-		m_parents = vector<int>(n + 1);
-		//m_rank = vector<int>(n + 1);
-
-		for (int i = 0; i < n + 1; ++i)
-		{
-			m_parents[i] = i;
-			//m_rank[i] = 0;
-		}
-	}
-
-	int Find(int a)
-	{
-
-		while (a != m_parents[a])
-		{
-			a = m_parents[a];
-		}
-
-		return a;
-	}
-
-	void Union(int a, int b)
-	{
-		int aRoot = Find(a);
-		int bRoot = Find(b);
-
-		if (aRoot == bRoot) return;
-
-		m_parents[bRoot] = aRoot;
-	}
-
-	//bool Union(int a, int b)
-	//{
-	//	int aRoot = Find(a);
-	//	int bRoot = Find(b);
-
-	//	if (aRoot == bRoot) return false;
-
-	//	if (m_rank[aRoot] == m_rank[bRoot])
-	//	{
-	//		m_parents[bRoot] = aRoot;
-	//		++m_rank[aRoot];
-	//		return true;
-	//	}
-
-	//	if (m_rank[aRoot] < m_rank[bRoot])
-	//	{
-	//		m_parents[aRoot] = bRoot;
-	//		return true;
-	//	}
-	//	else if (m_rank[aRoot] > m_rank[bRoot])
-	//	{
-	//		m_parents[bRoot] = aRoot;
-	//		return true;
-	//	}
-
-	//	return false;
-	//}
-
+	int check;
+	int a;
+	int b;
 };
+
+int find(int a)
+{
+	if (parent[a] == a)
+		return a;
+	else
+		return parent[a] = find(parent[a]);
+}
+
+void Union(int a, int b)
+{
+	int roota = find(a);
+	int rootb = find(b);
+
+	if (roota == rootb)
+		return;
+
+	if (depth[roota] < depth[rootb])
+		parent[roota] = rootb;
+	else
+		parent[rootb] = roota;
+
+	if (depth[roota] == depth[rootb])
+		++depth[roota];
+}
 
 int main()
 {
-	cin.tie(NULL);
-	ios_base::sync_with_stdio(false);
-
-	int m, n;
-
-	int c, a, b;
-
+	int n, m;
 	cin >> n >> m;
+	parent.resize(n + 1);
+	depth.resize(n + 1);
 
-	UF uf(n);
+	for (int i = 0; i <= n; ++i)
+	{
+		parent[i] = i;
+		depth[i] = 0;
+	}
+	
+	vector<Data> data;
 	for (int i = 0; i < m; ++i)
 	{
-		cin >> c >> a >> b;
+		int x, y, z;
+		cin >> x >> y >> z;
+		data.push_back({ x, y, z });
+	}
 
-		if (0 == c)
+	for (size_t i = 0; i < data.size(); ++i)
+	{
+		if (data[i].check == 0)
 		{
-			uf.Union(a, b);
-			continue;
+			Union(data[i].a, data[i].b);
 		}
 		else
 		{
-			auto aroot = uf.Find(a);
-			auto broot = uf.Find(b);
-
-			if (aroot == broot)
-				printf("YES\n");
-			else
+			if (find(data[i].a) != find(data[i].b))
 				printf("NO\n");
+			else
+				printf("YES\n");
 		}
 	}
 
