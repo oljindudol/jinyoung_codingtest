@@ -63,8 +63,8 @@ public:
 		{
 			name = um_Parents[name];
 		}
-
 		return name;
+
 		//if (name == um_Parents[name])
 		//{
 		//	return name;
