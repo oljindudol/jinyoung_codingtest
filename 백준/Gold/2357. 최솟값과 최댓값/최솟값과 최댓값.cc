@@ -70,7 +70,8 @@ void init(const vector<int>& Origin, vector<mmpair>& ST, int STidx, int start, i
 	ST[STidx] = { min(ST[STidx * 2].min,ST[STidx * 2 + 1].min),max(ST[STidx * 2].max,ST[STidx * 2 + 1].max) };
 }
 
-mmpair Find(const vector<mmpair>& ST, int STidx, int start, int end, const int left, const int right)
+
+ mmpair Find(const vector<mmpair>& ST, int STidx, int start, int end, const int left, const int right)
 {
 	//case1
 	if (left <= start && end <= right)
