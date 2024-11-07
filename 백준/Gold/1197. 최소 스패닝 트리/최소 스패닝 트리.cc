@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ void PrintVec(const vector<T>& vec)
 	}
 	cout << endl;
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -36,18 +38,12 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
+
 struct edge
 {
 	int to;
-	long long w;
-	//int visited;
+	int w;
 };
-
-#define INF 2147483647
-vector<vector<edge>> edges;
-int ret = INF;
-vector<int> visited;
-int v, e;
 
 struct cmp
 {
@@ -57,48 +53,54 @@ struct cmp
 	}
 };
 
-
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	priority_queue<edge, vector<edge>, cmp> pq;
+
+	int v, e;
 
 	cin >> v >> e;
-	++v;
+	vector<vector<edge>> edges(v + 1);
+	vector<int> visited(v + 1);
 
-	visited = vector<int>(v, 0);
-	edges = vector<vector<edge>>(v);
+	int f, t, c;
 
-	int f, t;
-	long long w;
+
 	for (int i = 0; i < e; ++i)
 	{
-		cin >> f >> t >> w;
-		edges[f].push_back({ t,w });
-		edges[t].push_back({ f,w });
-
+		cin >> f >> t >> c;
+		edges[f].push_back({ t,c });
+		edges[t].push_back({ f,c });
 	}
-
-	visited[0] = 1;
-	priority_queue<edge, vector<edge>, cmp> pq;
 	long long ret = 0;
-	for (const auto& e : edges[1])
-	{
-		pq.push(e);
-	}
-	visited[1] = 1;
+
+	pq.push({ 1,0 });
 
 	while (false == pq.empty())
 	{
-		auto top = pq.top();
+		auto cur = pq.top();
 		pq.pop();
 
-		if (1 == visited[top.to])
+		int curidx = cur.to;
+		int curw = cur.w;
+
+		if (1 == visited[curidx])
 		{
 			continue;
 		}
-		ret += top.w;
-		visited[top.to] = 1;
-		for (const auto& e : edges[top.to])
+		visited[curidx] = 1;
+		ret = ret + curw;
+
+		for (const auto& e : edges[curidx])
 		{
+			if (true == visited[e.to])
+			{
+				continue;
+			}
 			pq.push(e);
 		}
 	}
