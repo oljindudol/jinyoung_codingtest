@@ -111,7 +111,7 @@ int main()
 			f = parents[f];
 			t = parents[t];
 		}
-		cout << t << endl;
+		printf("%d ", f);
 	}
 
 	return 0;
