@@ -41,17 +41,68 @@ void PrintVec(const vector<vector<T>>& vec)
 
 struct edge
 {
+	int from;
 	int to;
 	int w;
 };
 
-struct cmp
+bool cmp(const edge& a, const edge& b)
 {
-	bool operator()(const edge& a, const edge& b)
+	return a.w < b.w;
+}
+
+vector<int> vertexes;
+vector<edge> edges;
+vector<int> parents;
+vector<int> depth;
+int v;
+
+void init()
+{
+	for (int i = 1; i < v + 1; ++i)
 	{
-		return a.w > b.w;
+		parents[i] = i;
 	}
-};
+}
+
+int find(int from)
+{
+	if (from == parents[from])
+	{
+		return from;
+	}
+
+	return find(parents[from]);
+}
+
+bool Union(int a, int b)
+{
+	int pa = find(a);
+	int pb = find(b);
+
+	if (pa == pb)
+	{
+		return false;
+	}
+
+	if (depth[pa] == depth[pb])
+	{
+		parents[pa] = pb;
+		++depth[pb];
+		return true;
+	}
+	if (depth[pa] < depth[pb])
+	{
+		parents[pa] = pb;
+		return true;
+	}
+	if (depth[pa] > depth[pb])
+	{
+		parents[pb] = pa;
+		return true;
+	}
+}
+
 
 int main()
 {
@@ -59,50 +110,33 @@ int main()
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	priority_queue<edge, vector<edge>, cmp> pq;
-
-	int v, e;
-
+	int  e;
 	cin >> v >> e;
-	vector<vector<edge>> edges(v + 1);
-	vector<int> visited(v + 1);
 
-	int f, t, c;
+	vertexes.resize(v + 1);
+	edges.resize(v + 1);
+	parents.resize(v + 1);
+	depth.resize(v + 1);
 
-
+	int f, t, w;
 	for (int i = 0; i < e; ++i)
 	{
-		cin >> f >> t >> c;
-		edges[f].push_back({ t,c });
-		edges[t].push_back({ f,c });
+		cin >> f >> t >> w;
+		edges.push_back({ f, t,w });
 	}
+
+	init();
+
+	sort(edges.begin(), edges.end(), cmp);
+
 	long long ret = 0;
-
-	pq.push({ 1,0 });
-
-	while (false == pq.empty())
+	for (const auto& e : edges)
 	{
-		auto cur = pq.top();
-		pq.pop();
-
-		int curidx = cur.to;
-		int curw = cur.w;
-
-		if (1 == visited[curidx])
+		if (false == Union(e.from, e.to))
 		{
 			continue;
 		}
-		visited[curidx] = 1;
-		ret = ret + curw;
-
-		for (const auto& e : edges[curidx])
-		{
-			if (true == visited[e.to])
-			{
-				continue;
-			}
-			pq.push(e);
-		}
+		ret += e.w;
 	}
 
 	cout << ret;
