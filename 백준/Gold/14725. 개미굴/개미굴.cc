@@ -2,120 +2,138 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
 
 using namespace std;
 
-struct room;
-
-struct Trie;
-
-struct room
+template <typename T>
+void PrintVec(const vector<T>& vec)
 {
-	string name;
-	Trie* address;
-};
-
-bool cmp(const room& a, const room& b)
-{
-	return a.name < b.name;
+	for (const auto& e : vec)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
 }
 
-struct Trie
-{
-	vector<room> child;
-	bool finish = false;
 
-	void insert(queue<string>& path)
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
 	{
-		if (true == path.empty())
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+/////////////////////////////////////////////
+struct TRIE;
+
+bool cmp(TRIE* a, TRIE* b);
+
+struct TRIE
+{
+	string name;
+	vector<TRIE*> child;
+
+
+	void insert(const vector<string>& origin, int idx)
+	{
+		if (origin.size() == idx)
 		{
 			return;
 		}
 
-		string cur = path.front();
-		path.pop();
-
-		bool findres = false;
-		Trie* curadd = nullptr;
-		for (auto& e : child)
+		auto iter = child.begin();
+		for (; iter != child.end(); ++iter)
 		{
-			if (cur == e.name)
+			if (origin[idx] == (*iter)->name)
 			{
-				findres = true;
-				curadd = e.address;
 				break;
 			}
 		}
-		//만들어주고 정렬
-		if (false == findres)
+
+		//못찾았을시
+		if (child.end() == iter)
 		{
-			curadd = new Trie;
-			room newroom = { cur,curadd };
-			child.push_back(newroom);
-			sort(child.begin(), child.end(), cmp);
+			auto newchild = new TRIE;
+			newchild->name = origin[idx];
+			child.push_back(newchild);
+			newchild->insert(origin, idx + 1);
 		}
-		curadd->insert(path);
+		else
+		{
+			(*iter)->insert(origin, idx + 1);
+		}
 	}
 
-	void PrintChild(int depth = 0)
+	void print(int depth)
 	{
-		if (true == child.empty())
+		sort(child.begin(), child.end(), cmp);
+		for (int i = 0; i < depth; ++i)
 		{
-			return;
+			cout << "--";
+			//printf("--");
 		}
-
-		for (auto& e : child)
+		if ("" != name)
 		{
-			for (int i = 0; i < depth; ++i)
-			{
-				cout << "--";
-			}
-			cout << e.name << endl;
-			e.address->PrintChild(depth + 1);
+			//cout << endl << name;
+			cout << name << endl;
+			//printf("%s\n", name.c_str());
+		}
+		for (const auto& e : child)
+		{
+			e->print(depth + 1);
 		}
 	}
+
 };
 
+
+bool cmp(TRIE* a, TRIE* b)
+{
+	return a->name < b->name;
+}
 
 
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-	int n;
+	int cnt;
+	cin >> cnt;
 
-	cin >> n;
+	int a;
+	string s;
 
-	vector <queue<string>> vecInputs;
-	for (int i = 0; i < n; ++i)
+
+	TRIE t;
+	for (int i = 0; i < cnt; ++i)
 	{
-		int m;
-		cin >> m;
-		queue<string> input;
-		for (int j = 0; j < m; ++j)
+		cin >> a;
+		vector<string> origin;
+		for (int j = 0; j < a; ++j)
 		{
-			string tmp;
-			cin >> tmp;
-			input.push(tmp);
+			cin >> s;
+			origin.push_back(s);
 		}
-		vecInputs.push_back(input);
+		t.insert(origin, 0);
 	}
 
-	Trie* root = new Trie;
-
-	for (auto& e : vecInputs)
-	{
-		//while (false == e.empty())
-		//{
-		//	cout << e.front() << ",";
-		//	e.pop();
-		//}
-		//cout << endl;
-
-		root->insert(e);
-	}
-
-	root->PrintChild();
-
+	t.print(-1);
 
 	return 0;
 }
