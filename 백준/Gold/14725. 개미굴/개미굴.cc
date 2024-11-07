@@ -83,14 +83,14 @@ struct TRIE
 		sort(child.begin(), child.end(), cmp);
 		for (int i = 0; i < depth; ++i)
 		{
-			cout << "--";
-			//printf("--");
+			//cout << "--";
+			printf("--");
 		}
 		if ("" != name)
 		{
 			//cout << endl << name;
-			cout << name << endl;
-			//printf("%s\n", name.c_str());
+			//cout << name << endl;
+			printf("%s\n", name.c_str());
 		}
 		for (const auto& e : child)
 		{
