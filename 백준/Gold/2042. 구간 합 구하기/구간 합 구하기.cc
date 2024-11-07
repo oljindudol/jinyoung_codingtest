@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ void PrintVec(const vector<T>& vec)
 	}
 	cout << endl;
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -37,105 +39,78 @@ void PrintVec(const vector<vector<T>>& vec)
 
 /////////////////////////////////////////////
 
-void InitST(const vector<long long>& Origin, vector<long long>& ST, long long STidx, long long start, long long end)
+void update(long long  idx, long long  val, vector<long long >& pw)
 {
-	if (start == end)
+	while (idx < pw.size())
 	{
-		ST[STidx] = Origin[start];
-		return;
-	}
-	else
-	{
-		long long mid = start + (end - start) / 2;
-		InitST(Origin, ST, STidx * 2, start, mid);
-		InitST(Origin, ST, STidx * 2 + 1, mid + 1, end);
-		ST[STidx] = ST[STidx * 2] + ST[STidx * 2 + 1];
+		pw[idx] += val;
+		idx = idx + (idx & -idx);
 	}
 }
 
-long long PSum(vector<long long>& ST, long long STidx, long long start, long long end, const long long left, const long long right)
+long long sum(long long  idx, vector<long long >& pw)
 {
-	//case 1
-	if (left <= start && end <= right)
+	long long ret = 0;
+
+	while (0 < idx)
 	{
-		return ST[STidx];
-	}
-	//case 3
-	else if (end < left || right < start)
-	{
-		return 0;
+		ret += pw[idx];
+		idx = idx - (idx & -idx);
 	}
 
-	//case 2
-	long long mid = start + (end - start) / 2;
-	long long lsum = PSum(ST, STidx * 2, start, mid, left, right);
-	long long rsum = PSum(ST, STidx * 2 + 1, mid + 1, end, left, right);
-
-	return lsum + rsum;
+	return ret;
 }
 
-void Update(vector<long long>& Origin, vector<long long>& ST, long long STidx, long long start, long long end, const long long Oidx, const long long newval)
+long long q(long long  s, long long  e, vector<long long >& pw)
 {
-	if (Oidx < start || Oidx > end)
-	{
-		return;
-	}
-
-	if (start == end)
-	{
-		Origin[Oidx] = newval;
-		ST[STidx] = newval;
-		return;
-	}
-
-	long long mid = start + (end - start) / 2;
-	Update(Origin, ST, STidx * 2, start, mid, Oidx, newval);
-	Update(Origin, ST, STidx * 2 + 1, mid + 1, end, Oidx, newval);
-	ST[STidx] = ST[STidx * 2] + ST[STidx * 2 + 1];
-	return;
+	return sum(e, pw) - sum(s - 1, pw);
 }
-
 
 int main()
 {
-
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 
-	long long n, m, k;
+	long long  n, m, k;
 	cin >> n >> m >> k;
-	long long testcnt = m + k;
-	vector<long long> nums(n);
-	long long TreeH = ceil(log(n) / log(2));
-	long long TreeSz = pow(2, TreeH + 1) - 1;
-	vector<long long> ST(TreeSz);
 
-	//수 입력
-	long long tmp;
-	for (long long i = 0; i < n; ++i)
+	++n;
+
+	vector<long long> origin(n);
+	vector<long long> pw(n);
+
+	long long t;
+	for (long long i = 1; i < n; ++i)
 	{
-		cin >> tmp;
-		nums[i] = tmp;
+		cin >> t;
+		origin[i] = t;
 	}
 
-	InitST(nums, ST, 1, 0, n - 1);
-
-	//합구하기,undate
-	long long a, b, c;
-	for (long long i = 0; i < testcnt; ++i)
+	//초기화
+	for (long long i = 1; i < n; ++i)
 	{
-		cin >> a >> b >> c;
-		//합구하기
-		if (2 == a)
+		update(i, origin[i], pw);
+	}
+
+	//t1 : 1 바꾸기 2.구간합
+	long long  t1, t2, t3;
+	for (long long i = 0; i < (m + k); ++i)
+	{
+		cin >> t1 >> t2 >> t3;
+
+		if (1 == t1)
 		{
-			cout << PSum(ST, 1, 0, n - 1, b - 1, c - 1) << endl;
+			long long  diff = t3 - origin[t2];
+			origin[t2] = t3;
+			update(t2, diff, pw);
 		}
-		//update
 		else
 		{
-			Update(nums, ST, 1, 0, n - 1, b - 1, c);
+			long long res = q(t2, t3, pw);
+			cout << res << " ";
 		}
 	}
+
 
 	return 0;
 }
