@@ -169,11 +169,14 @@ int main()
 	{
 		for (const auto& c : r)
 		{
-			printf("%d", (c % 10));
+			//printf("%d", c);
+			cout << c % 10;
 		}
-		printf("\n");
+		cout << '\n';
+		//printf("\n");
 	}
 
+	//PrintVec(origin);
 	return 0;
 }
 
