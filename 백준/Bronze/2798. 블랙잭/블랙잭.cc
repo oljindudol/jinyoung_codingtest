@@ -1,111 +1,45 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <queue>
-#include <set>
-#include <cmath>
-#include <string>
-#include <stdio.h>
-#include <unordered_map>
-#include <ostream>
-#include <stack>
-#include <unordered_set>
-#include <sstream>
 
 using namespace std;
 
-template <typename T>
-void PrintVec(const vector<T>& vec)
-{
-	for (const auto& e : vec)
-	{
-		cout << e << " ";
-	}
-	cout << '\n';
-}
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
 
+    int N, M;
+    cin >> N >> M;
+    vector<int> cards(N);
+    
+    for (int i = 0; i < N; ++i) {
+        cin >> cards[i];
+    }
 
-template <typename T>
-void PrintVec(const vector<vector<T>>& vec)
-{
-	for (const auto& e1 : vec)
-	{
-		for (const auto& e2 : e1)
-		{
-			cout << e2 << " ";
-		}
-		cout << '\n';
-	}
-	cout << '\n';
-}
+    sort(cards.begin(), cards.end());
 
-/////////////////////////////////////////////
-constexpr int INF = 1e3 + 1;
-vector<bool> IsPrime;
+    int closest_sum = 0;
 
-void init()
-{
-	IsPrime.resize(INF, true);
+    // 첫 번째 카드의 인덱스
+    for (int i = 0; i < N - 2; ++i) {
+        // 두 번째 카드의 포인터
+        for (int j = i + 1; j < N - 1; ++j) {
+            int left = j + 1; // 세 번째 카드의 시작 포인터
+            int right = N - 1; // 세 번째 카드의 끝 포인터
 
-	IsPrime[0] = false;
-	IsPrime[1] = false;
+            while (left <= right) {
+                int current_sum = cards[i] + cards[j] + cards[left];
+                
+                if (current_sum <= M) {
+                    closest_sum = max(closest_sum, current_sum);
+                    left++; // 합을 증가시키기 위해 왼쪽 포인터 이동
+                } else {
+                    right--; // 합을 줄이기 위해 오른쪽 포인터 이동
+                }
+            }
+        }
+    }
 
-	for (int i = 2; i < INF; ++i)
-	{
-		if (false == IsPrime[i])
-		{
-			continue;
-		}
-
-		for (int j = i * i; j < INF; j += i)
-		{
-			IsPrime[j] = false;
-		}
-	}
-}
-
-int main()
-{
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-
-	int n, m;
-
-	cin >> n >> m;
-	vector<int> cards(n);
-
-	int t;
-	for (int i = 0; i < n; ++i)
-	{
-		cin >> t;
-		cards[i] = t;
-	}
-
-	int retsum = 0;
-	sort(cards.begin(), cards.end());
-
-	for (int mid = 1; mid < cards.size() - 1; ++mid)
-	{
-		int left = mid - 1;
-		int right = mid + 1;
-
-		while (left >= 0 && right < cards.size())
-		{
-			int tsum = cards[mid] + cards[left] + cards[right];
-			if (tsum <= m)
-			{
-				retsum = max(retsum, tsum);
-				left = mid - 1;
-				right = right + 1;
-			}
-			else
-			{
-				--left;
-			}
-		}
-	}
-	cout << retsum;
-
-	return 0;
+    cout << closest_sum << '\n';
+    return 0;
 }
