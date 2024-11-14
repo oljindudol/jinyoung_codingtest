@@ -82,49 +82,30 @@ int main()
 		cards[i] = t;
 	}
 
-	int retsum = 1e9 + 1;
-	int mindiff = 1e9 + 1;
+	int retsum = 0;
 	sort(cards.begin(), cards.end());
 
-	auto iterend = cards.end();
-	for (int left = 0; left < n - 2; ++left)
+	for (int mid = 1; mid < cards.size() - 1; ++mid)
 	{
-		for (int mid = left + 1; mid < n - 1; ++mid)
+		int left = mid - 1;
+		int right = mid + 1;
+
+		while (left >= 0 && right < cards.size())
 		{
-			int sum = cards[left] + cards[mid];
-			int target = m - sum;
-			auto lb = lower_bound(cards.begin() + mid + 1, iterend, target);
-			int newidx;
-			if (iterend == lb)
+			int tsum = cards[mid] + cards[left] + cards[right];
+			if (tsum <= m)
 			{
-				newidx = cards.size() - 1;
+				retsum = max(retsum, tsum);
+				left = mid - 1;
+				right = right + 1;
 			}
 			else
 			{
-				newidx = lb - cards.begin();
-				if (target == *lb)
-				{
-					cout << m;
-					return 0;
-				}
-				else
-				{
-					--newidx;
-					if (mid == newidx)
-					{
-						continue;
-					}
-				}
-			}
-			int newdiff = m - (sum + cards[newidx]);
-			if (mindiff > newdiff)
-			{
-				mindiff = newdiff;
-				retsum = sum + cards[newidx];
+				--left;
 			}
 		}
 	}
 	cout << retsum;
+
 	return 0;
 }
-
