@@ -3,11 +3,14 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
 
 using namespace std;
 
@@ -18,8 +21,9 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -30,89 +34,56 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 /////////////////////////////////////////////
-
-vector<long long> map;
-vector<long long> targets;
-int n, m;
-
-//int dfs(long long left, long long right, const long long target)
-//{
-//	if (left > right)
-//	{
-//		return 0;
-//	}
-//	long long mid = left + (right - left) / 2;
-//
-//	if (target == map[mid])
-//	{
-//		return 1;
-//	}
-//
-//	if (target > map[mid])
-//	{
-//		return dfs(mid + 1, right, target);
-//	}
-//
-//	return dfs(left, mid, target);
-//}
-
-int bs(int target)
+struct pos
 {
-	int left = 0;
-	int right = map.size();
+	int x;
+	int y;
+};
 
-	while (left < right)
+bool cmp(const pos& a, const pos& b)
+{
+	if (a.y == b.y)
 	{
-
-		long long mid = left + (right - left) / 2;
-
-
-		if (target == map[mid])
-		{
-			return 1;
-		}
-
-		if (target > map[mid])
-		{
-			left = mid + 1;
-			continue;
-		}
-
-		right = mid;
+		return a.x < b.x;
 	}
-
-	return 0;
+	return a.y < b.y;
 }
 
 int main()
 {
-	long long tmp;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	int n, m;
+	unordered_set<int> us;
 
 	cin >> n;
+	int t;
 	for (int i = 0; i < n; ++i)
 	{
-		cin >> tmp;
-		map.push_back(tmp);
+		cin >> t;
+		us.insert(t);
 	}
-	sort(map.begin(), map.end());
 
 	cin >> m;
 	for (int i = 0; i < m; ++i)
 	{
-		cin >> tmp;
-		targets.push_back(tmp);
-	}
-
-	for (const auto& e : targets)
-	{
-		tmp = bs(e);
-		printf("%d\n", tmp);
+		cin >> t;
+		if (us.end() != us.find(t))
+		{
+			cout << 1 << " ";
+		}
+		else
+		{
+			cout << 0 << " ";
+		}
 	}
 
 	return 0;
