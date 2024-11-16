@@ -3,11 +3,15 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
@@ -18,8 +22,9 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -30,60 +35,60 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 /////////////////////////////////////////////
-long long k, n;
-vector<long long> cables;
-
-bool IsPossible(long long mid)
+long long n, k;
+bool IsPossible(long long cut, const vector<long long>& cables)
 {
-	long long psum = 0;
-
-	for (const auto& e : cables)
+	int sum = 0;
+	for (const auto& l : cables)
 	{
-		psum += (e / mid);
-		if (psum >= n)
-		{
-			return true;
-		}
+		sum += l / cut;
 	}
-	return false;
+
+	if (sum < n)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
 	cin >> k >> n;
 
-	cables.resize(k);
-
-	long long lenmax = 0;
-	long long tlen;
+	long long left = 1;
+	long long right = 0;
+	vector<long long> cables(k);
 	for (int i = 0; i < k; ++i)
 	{
-		cin >> tlen;
-		cables[i] = tlen;
-		lenmax = max(lenmax, tlen);
+		cin >> cables[i];
+		right = max(right, cables[i]);
 	}
-
-	long long left = 1;
-	long long right = lenmax;
 
 	while (left <= right)
 	{
 		long long mid = left + (right - left) / 2;
-		if (true == IsPossible(mid))
+
+		bool b = IsPossible(mid, cables);
+		if (true == b)
 		{
 			left = mid + 1;
-			continue;
 		}
 		else
 		{
 			right = mid - 1;
-			continue;
 		}
 	}
 
