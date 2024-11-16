@@ -51,7 +51,7 @@ bool cmp(const node& a, const node& b)
 {
 	if (a.cnt == b.cnt)
 	{
-		return a.val < b.val;
+		return a.val > b.val;
 	}
 	return a.cnt < b.cnt;
 }
@@ -112,22 +112,13 @@ int main()
 
 	sort(vcnt.begin(), vcnt.end(), cmp);
 
-	int idx = 8000;
-	int mxcnt = vcnt[idx].cnt;
-	while (mxcnt == vcnt[idx].cnt)
+	if (vcnt[8000].cnt == vcnt[7999].cnt)
 	{
-		--idx;
-	}
-	++idx;
-
-	if (8000 != idx)
-	{
-		++idx;
-		cout << vcnt[idx].val << '\n';
+		cout << vcnt[7999].val << '\n';
 	}
 	else
 	{
-		cout << vcnt[idx].val << '\n';
+		cout << vcnt[8000].val << '\n';
 	}
 
 	cout << nums[cnt - 1] - nums[0];
