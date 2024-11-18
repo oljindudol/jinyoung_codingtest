@@ -71,13 +71,21 @@ int main()
 		cin >> s;
 
 		//if (true == isalpha(s[0]))
-		if (false == (i0 <= s[0] && i9 >= s[0]))
+		//if (false == (i0 <= s[0] && i9 >= s[0]))
+		//{
+		//	cout << um1[s] << " ";
+		//}
+		//else
+		//{
+		//	cout << um2[stoi(s)] << " ";
+		//}
+		if (i9 >= s[0])
 		{
-			cout << um1[s] << " ";
+			cout << um2[stoi(s)] << " ";
 		}
 		else
 		{
-			cout << um2[stoi(s)] << " ";
+			cout << um1[s] << " ";
 		}
 
 	}
