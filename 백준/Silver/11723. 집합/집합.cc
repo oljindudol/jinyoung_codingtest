@@ -69,20 +69,15 @@ int main()
 		{
 			cin >> t;
 			s.insert(t);
-			continue;
 		}
 
-		if ("remove" == str)
+		else if ("remove" == str)
 		{
 			cin >> t;
-			if (s.end() != s.find(t))
-			{
-				s.erase(t);
-			}
-			continue;
+			s.erase(t);
 		}
 
-		if ("check" == str)
+		else if ("check" == str)
 		{
 			cin >> t;
 			if (s.end() != s.find(t))
@@ -95,10 +90,9 @@ int main()
 				//cout << 0 << " ";
 				printf("0 ");
 			}
-			continue;
 		}
 
-		if ("toggle" == str)
+		else if ("toggle" == str)
 		{
 			cin >> t;
 			if (s.end() != s.find(t))
@@ -109,10 +103,9 @@ int main()
 			{
 				s.insert(t);
 			}
-			continue;
 		}
 
-		if ("all" == str)
+		else if ("all" == str)
 		{
 			s = s1;
 			//s.clear();
@@ -120,10 +113,9 @@ int main()
 			//{
 			//	s.insert(i);
 			//}
-			continue;
 		}
 
-		if ("empty" == str)
+		else if ("empty" == str)
 		{
 			s.clear();
 			continue;
