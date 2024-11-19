@@ -1,38 +1,50 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
-#include<unordered_set>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
-int cntcom;
-int cntpair;
-
-vector<bool> v;
-vector<vector<bool>> g;
-
-int ret;
-
-void dfs(int _f)
+template <typename T>
+void PrintVec(const vector<T>& vec)
 {
-	if (true == v[_f])
+	for (const auto& e : vec)
 	{
-		return;
+		cout << e << " ";
 	}
-	v[_f] = true;
-	++ret;
-
-	for (int i = 0; i < cntcom; ++i)
-	{
-		if (true == g[_f][i])
-		{
-			dfs(i);
-		}
-	}
+	cout << '\n';
 }
+
+
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
+constexpr long long INF = 4e6 + 1;
+constexpr long long MOD = 1e9 + 7;
+
+
 
 
 
@@ -40,28 +52,42 @@ int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
-	cin >> cntcom >> cntpair;
+	int n, k;
+	cin >> n >> k;
+	vector<vector<int>> edges(n + 1);
+	vector<int> visited(n + 1);
 
-	g.resize(cntcom, vector<bool>(cntcom, false));
-	v.resize(cntcom, false);
-
-	if (1 == cntcom)
+	int t1, t2;
+	for (int i = 0; i < k; ++i)
 	{
-		cout << 0;
-		return ret;
+		cin >> t1 >> t2;
+		edges[t1].push_back(t2);
+		edges[t2].push_back(t1);
 	}
 
-	for (int i = 0; i < cntpair; ++i)
-	{
-		int f, t;
-		cin >> f >> t;
-		g[f - 1][t - 1] = true;
-		g[t - 1][f - 1] = true;
-	}
+	queue<int> q;
+	q.push(1);
+	visited[1] = 1;
 
-	dfs(0);
-	--ret;
-	cout << ret;
+	int ret = 0;
+	while (false == q.empty())
+	{
+		int cur = q.front();
+		q.pop();
+		ret++;
+		for (const auto& to : edges[cur])
+		{
+			if (1 == visited[to])
+			{
+				continue;
+			}
+			visited[to] = 1;
+			q.push(to);
+		}
+	}
+	cout << --ret;
+
 	return 0;
 }
