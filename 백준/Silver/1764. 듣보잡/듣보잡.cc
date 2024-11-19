@@ -61,30 +61,17 @@ int main()
 		um[s] = 1;
 	}
 
+	vector<string> sret;
 	while (m--)
 	{
 		cin >> s;
 		if (1 == um[s])
 		{
-			um[s] = 2;
-		}
-		else
-		{
-			um[s] = 1;
-		}
-	}
-
-	vector<string> sret;
-	for (const auto& e : um)
-	{
-		if (2 == e.second)
-		{
-			sret.push_back(e.first);
+			sret.push_back(s);
 		}
 	}
 
 	ret += to_string(sret.size());
-	ret += " ";
 
 	sort(sret.begin(), sret.end());
 
