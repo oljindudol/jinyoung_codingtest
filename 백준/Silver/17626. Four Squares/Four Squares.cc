@@ -10,6 +10,8 @@
 #include <ostream>
 #include <stack>
 #include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
@@ -39,53 +41,37 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
-constexpr int INF = 50001;
-
-struct node
-{
-	int val;
-	int depth;
-};
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
+
 	int n;
-
 	cin >> n;
-	vector<int> dp(n + 1, INF);
-	dp[0] = 0;
+	vector<int> dp(n + 1, n);
 
-	for (int i = 1; i < n + 1; ++i)
+	dp[0] = 0;
+	dp[1] = 1;
+	for (int i = 2; i < n + 1; ++i)
 	{
 		int sq = sqrt(i);
-		if (i == pow(sq, 2))
+		int pw = pow(sq, 2);
+		if (i == pw)
 		{
 			dp[i] = 1;
-			continue;
 		}
-
-		for (int j = 1; j < sq + 1; ++j)
+		else
 		{
-			dp[i] = min(dp[i], dp[i - pow(j, 2)] + 1);
+			for (int j = 1; j <= sq; ++j)
+			{
+				int newval = i - pow(j, 2);
+				dp[i] = min(dp[i], dp[newval] + 1);
+			}
 		}
 	}
 
 	cout << dp[n];
-	//queue<node> q;
-	//q.push({ n,0 });
-
-	//while (true)
-	//{
-	//	sqrt()
-
-
-	//}
-
-
 	return 0;
 }
-
-
