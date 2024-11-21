@@ -1,55 +1,74 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
-#include<unordered_set>
-#include<queue>
-#include<stdio.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
-int cnt;
+template <typename T>
+void PrintVec(const vector<T>& vec)
+{
+	for (const auto& e : vec)
+	{
+		cout << e << " ";
+	}
+	cout << '\n';
+}
 
-vector<bool> vs;
 
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
-	cin >> cnt;
+	int n;
+
+	cin >> n;
 
 	priority_queue<int> pq;
-	vector<int> input;
 
-	for (int i = 0; i < cnt; ++i)
+	string ret = "";
+	int t;
+	while (n--)
 	{
-		int t;
 		cin >> t;
-		input.push_back(t);
-	}
-
-
-
-	for (int i = 0; i < cnt; ++i)
-	{
-		auto& t = input[i];
-
 		if (0 == t)
 		{
-			if (pq.empty())
+			if (true == pq.empty())
 			{
-				printf("0\n");
+				ret += "0 ";
+				continue;
 			}
-			else
-			{
-				printf("%d\n",pq.top());
-				pq.pop();
-			}
-
+			ret += to_string(pq.top());
+			ret += " ";
+			pq.pop();
 		}
 		else
 		{
@@ -57,6 +76,7 @@ int main()
 		}
 	}
 
+	cout << ret;
 
 
 	return 0;
