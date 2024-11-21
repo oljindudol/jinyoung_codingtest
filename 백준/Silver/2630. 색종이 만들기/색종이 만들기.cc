@@ -3,10 +3,15 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
@@ -17,8 +22,9 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -29,76 +35,96 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
-int n;
-
-#define WHITE 0
-#define BLUE 1
-#define ENDDFS 2
-vector<int> colorcnt(ENDDFS, 0);
-int dfs(int minrow, int maxrow, int mincol, int maxcol, const vector<vector<int>>& map)
+/////////////////////////////////////////////
+enum COLOR
 {
-	if (minrow + 1 == maxrow && mincol + 1 == maxcol)
+	WHITE,
+	BLUE,
+	END,
+};
+int n;
+vector<vector<COLOR>> map;
+
+int retwhite = 0;
+int retblue = 0;
+
+COLOR dfs(int row, int col, int len)
+{
+	if (1 == len)
 	{
-		return map[minrow][mincol];
+		return map[row][col];
 	}
 
-	int midrow = (minrow + maxrow) / 2;
-	int midcol = (mincol + maxcol) / 2;
+	int hlen = len / 2;
+	COLOR res[4];
 
-	int r[4];
+	res[0] = dfs(row, col, hlen);
+	res[1] = dfs(row + hlen, col, hlen);
+	res[2] = dfs(row, col + hlen, hlen);
+	res[3] = dfs(row + hlen, col + hlen, hlen);
 
-	r[0] = dfs(minrow, midrow, mincol, midcol, map);
-	r[1] = dfs(midrow, maxrow, mincol, midcol, map);
-	r[2] = dfs(minrow, midrow, midcol, maxcol, map);
-	r[3] = dfs(midrow, maxrow, midcol, maxcol, map);
-
-	if ((WHITE == r[0]) && (r[0] == r[1]) && (r[1] == r[2]) && (r[2] == r[3]))
+	//모두 같을 경우
+	if (res[0] == res[1] && res[1] == res[2] && res[2] == res[3])
 	{
-		return WHITE;
-	}
-	if ((BLUE == r[0]) && (r[0] == r[1]) && (r[1] == r[2]) && (r[2] == r[3]))
-	{
-		return BLUE;
+		return res[0];
 	}
 
+	//다를경우
 	for (int i = 0; i < 4; ++i)
 	{
-		if (ENDDFS == r[i])
+		if (WHITE == res[i])
 		{
+			++retwhite;
 			continue;
 		}
-		++colorcnt[r[i]];
+		if (BLUE == res[i])
+		{
+			++retblue;
+			continue;
+		}
 	}
-	return ENDDFS;
+	return END;
 }
+
 int main()
 {
-	cin >> n;
-	vector<vector<int>> map(n, vector<int>(n));
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-	int tmp;
+	cin >> n;
+	map.resize(n, vector<COLOR>(n, WHITE));
+
+	int t;
 	for (int row = 0; row < n; ++row)
 	{
 		for (int col = 0; col < n; ++col)
 		{
-			cin >> tmp;
-			map[row][col] = tmp;
-
+			cin >> t;
+			if (BLUE == t)
+			{
+				map[row][col] = BLUE;
+			}
 		}
 	}
-	auto r = dfs(0, n, 0, n, map);
-	if (ENDDFS != r)
+
+	int fin = dfs(0, 0, n);
+	if (BLUE == fin)
 	{
-		++colorcnt[r];
+		++retblue;
+	}
+	if (WHITE == fin)
+	{
+		++retwhite;
 	}
 
-	cout << colorcnt[WHITE] << endl;
-	cout << colorcnt[BLUE] << endl;
+	cout << retwhite << " ";
+	cout << retblue;
 
 	return 0;
 }
