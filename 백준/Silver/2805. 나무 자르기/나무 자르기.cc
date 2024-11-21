@@ -1,106 +1,104 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
-//input
-int treen;
-int treelen;
-vector<int> treeh;
-
-int leftcutsize;
-int rightcutsize;
-int retcut;
-
-bool isplus(int cutsize)
+template <typename T>
+void PrintVec(const vector<T>& vec)
 {
-	//자른 나무의 합을 구함
+	for (const auto& e : vec)
+	{
+		cout << e << " ";
+	}
+	cout << '\n';
+}
+
+
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
+long long n, k;
+vector<long long> trees;
+
+
+bool IsPossible(long long len)
+{
 	long long sum = 0;
-	for (auto& h : treeh)
-	{
-		if (cutsize >= h)
-		{
-			break;
-		}
-		sum += (h - cutsize);
-	}
-	// 합 - 목표길이 의 부호를 판별
-	long long remain = sum - treelen;
 
-	if (0 > remain)
-		return false;
-	return true;
+	for (const auto& e : trees)
+	{
+		long long newlen = e - len;
+		if (0 > newlen)
+		{
+			continue;
+		}
+		sum += (newlen);
+		if (sum >= k)
+		{
+			return true;
+		}
+	}
+	return false;
 }
-
-
-void bs(int cutsize)
-{
-	
-	bool plusfirst = isplus(cutsize);
-	bool plussecond;
-	//충분할떄
-	if (true == plusfirst)
-	{
-		plussecond = isplus(cutsize+1);
-
-		//임계값
-		if (false == plussecond)
-		{
-			retcut = cutsize;
-			return;
-		}
-		else
-		{
-			rightcutsize = cutsize + 1;
-			bs((leftcutsize + rightcutsize) / 2);
-		}
-	}
-	//부족할떄
-	else
-	{
-		plussecond = isplus(cutsize - 1);
-
-		//임계값
-		if (true == plussecond)
-		{
-			retcut = cutsize - 1;
-			return;
-		}
-		else
-		{
-			leftcutsize = cutsize -1;
-			bs((leftcutsize + rightcutsize) / 2);
-		}
-	}
-}
-
-
-
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
-	cin >> treen >> treelen;
+	cin >> n >> k;
 
-	for (int i = 0; i < treen; ++i)
+	trees.resize(n);
+	long long mx = 0;
+	for (int i = 0; i < n; ++i)
 	{
-		string h;
-		cin >> h;
-		treeh.push_back(stoi(h));
+		cin >> trees[i];
+		mx = max(mx, trees[i]);
 	}
 
-	sort(treeh.begin(),treeh.end(), greater<int>());
-	leftcutsize = treeh.front()-1;
-	rightcutsize = 0;
-	retcut = rightcutsize / 2;
+	long long left = 0, right = mx - 1;
 
-	bs(retcut);
+	while (left <= right)
+	{
+		long long mid = left + (right - left) / 2;
 
-	cout << retcut;
+		bool b = IsPossible(mid);
+		if (true == b)
+		{
+			left = mid + 1;
+		}
+		else
+		{
+			right = mid - 1;
+		}
+	}
+
+	cout << right;
+
 	return 0;
 }
