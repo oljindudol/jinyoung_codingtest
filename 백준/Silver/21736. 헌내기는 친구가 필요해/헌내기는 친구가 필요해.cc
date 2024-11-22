@@ -1,88 +1,127 @@
-#include<iostream>
-#include<vector>
-#include<string>
-#include<algorithm>
-#include<cmath>
-#include<set>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
 
 using namespace std;
 
-int m, n;
-vector<vector<char>> g;
-int ret;
-
-
-void dfs(int _row,int _col)
+template <typename T>
+void PrintVec(const vector<T>& vec)
 {
-	if (_row < 0
-		||
-		_col < 0
-		||
-		_row >= m
-		||
-		_col >= n
-		||
-		'X' == g[_row][_col]
-		)
+	for (const auto& e : vec)
 	{
-		return;
+		cout << e << " ";
 	}
-	if ('P' == g[_row][_col])
-	{
-		++ret;
-	}
-
-	g[_row][_col] = 'X';
-
-	dfs(_row - 1, _col);
-	dfs(_row + 1, _col);
-	dfs(_row, _col - 1);
-	dfs(_row, _col + 1);
+	cout << '\n';
 }
 
 
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
+int maxrow, maxcol;
+vector<vector<char>> map;
+int drow[4] = { 1,-1,0,0 };
+int dcol[4] = { 0,0,1,-1 };
+int ret = 0;
+
+bool IsVaild(int row, int col)
+{
+	if (0 > row || maxrow <= row)
+	{
+		return false;
+	}
+
+	if (0 > col || maxcol <= col)
+	{
+		return false;
+	}
+
+	if ('X' == map[row][col])
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void dfs(int row, int col)
+{
+	if ('P' == map[row][col])
+	{
+		++ret;
+	}
+	map[row][col] = 'X';
+
+	for (int i = 0; i < 4; ++i)
+	{
+		int newrow = row + drow[i];
+		int newcol = col + dcol[i];
+		if (true == IsVaild(newrow, newcol))
+		{
+			dfs(newrow, newcol);
+		}
+	}
+}
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
-	ret = 0;
+	cin >> maxrow >> maxcol;
+	int dorow;
+	int docol;
 
-	pair<int, int> me;
+	map.resize(maxrow, vector<char>(maxcol));
 
-	cin >> m >> n ;
-
-
-	g.resize(m, vector<char>(n, 'O'));
-
-
-	for (int i = 0; i < m; ++i)
+	for (int row = 0; row < maxrow; ++row)
 	{
-		string s;
-		cin >> s;
-		for (int j = 0; j < n; ++j)
+		for (int col = 0; col < maxcol; ++col)
 		{
-			if ('I' == s[j])
+			cin >> map[row][col];
+			if ('I' == map[row][col])
 			{
-				me = { i,j };
+				dorow = row;
+				docol = col;
+				map[row][col] = 'X';
 			}
-			g[i][j] = s[j];
 		}
-		
 	}
 
-	dfs(me.first, me.second);
-	
+	dfs(dorow, docol);
+
 	if (0 == ret)
 	{
 		cout << "TT";
-		return 0;
 	}
-
-
-	cout << ret;
-
+	else
+	{
+		cout << ret;
+	}
 
 
 	return 0;
