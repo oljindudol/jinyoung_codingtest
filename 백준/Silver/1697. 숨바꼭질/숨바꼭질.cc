@@ -69,7 +69,7 @@ int main()
 
 	queue<node> q;
 	//priority_queue<node, vector<node>, cmp> q;
-	vector<int> visited(100001);
+	vector<bool> visited(100001);
 	q.push({ n,0 });
 
 	while (false == q.empty())
@@ -80,11 +80,11 @@ int main()
 
 		//cout << cur.depth << ": " << cur.pos << endl;
 
-		if (0 > cur.pos || 100000 < cur.pos || 1 == visited[cur.pos])
+		if (0 > cur.pos || 100000 < cur.pos || true == visited[cur.pos])
 		{
 			continue;
 		}
-		visited[cur.pos] = 1;
+		visited[cur.pos] = true;
 
 		if (cur.pos == k)
 		{
