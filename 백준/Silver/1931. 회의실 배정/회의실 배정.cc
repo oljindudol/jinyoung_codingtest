@@ -3,11 +3,17 @@
 #include <algorithm>
 #include <queue>
 #include <set>
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
 
 using namespace std;
 
@@ -18,8 +24,9 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
+
 
 template <typename T>
 void PrintVec(const vector<vector<T>>& vec)
@@ -30,67 +37,61 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 /////////////////////////////////////////////
-struct con
+struct node
 {
-	int s;
-	int e;
+	int start;
+	int end;
 };
 
-bool cmp(const con& a, const con& b)
+bool cmp(const node& a, const node& b)
 {
-	if (a.s == b.s)
+	if (a.start == b.start)
 	{
-		return a.e < b.e;
+		return a.end < b.end;
 	}
-	return a.s < b.s;
+	return a.start < b.start;
 }
 
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
 	int n;
 	cin >> n;
+	vector<node> nodes(n);
 
-	int s, e;
-
-	vector<con> confs;
+	int ret = 0;
 	for (int i = 0; i < n; ++i)
 	{
-		cin >> s >> e;
-
-		confs.push_back({ s,e });
+		cin >> nodes[i].start >> nodes[i].end;
 	}
+	sort(nodes.begin(), nodes.end(), cmp);
 
-	sort(confs.begin(), confs.end(), cmp);
+	int left = 0;
+	int right = 0;
 
-	//for (const auto& c : confs)
-	//{
-	//	cout << c.s << " " << c.e << endl;
-	//}
-
-	int ret = 1;
-	int curstart = confs[0].s;
-	int curend = confs[0].e;
-
-	for (int i = 1; i < confs.size(); ++i)
+	for (const auto& e : nodes)
 	{
-		if (confs[i].s < curend)
+		if (right <= e.start)
 		{
-			curend = min(curend, confs[i].e);
-			continue;
+			++ret;
+			left = e.start;
+			right = e.end;
 		}
-
-		++ret;
-		curstart = confs[i].s;
-		curend = confs[i].e;
+		else
+		{
+			right = min(right, e.end);
+		}
 	}
 
 	cout << ret;
-
 	return 0;
 }
