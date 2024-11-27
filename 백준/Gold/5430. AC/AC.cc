@@ -53,7 +53,7 @@ int main()
 
 	int tcnt;
 	cin >> tcnt;
-	deque<int> dq;
+	vector<int> dq;
 	string cmd;
 	int t;
 	string ret;
