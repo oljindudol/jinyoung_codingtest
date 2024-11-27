@@ -46,23 +46,15 @@ void PrintVec(const vector<vector<T>>& vec)
 int n;
 vector<vector<int>> map;
 
-void dfs(const int from, int to, vector<int>& visited, bool first)
+void dfs(const int from, int to, vector<int>& visited)// , bool first)
 {
-	if (false == first)
-	{
-		visited[to] = 1;
-		map[from][to] = 1;
-	}
-	else
-	{
-		first = false;
-	}
-
 	for (int i = 0; i < n; ++i)
 	{
 		if (1 == map[to][i] && 0 == visited[i])
 		{
-			dfs(from, i, visited, first);
+			visited[i] = 1;
+			map[from][i] = 1;
+			dfs(from, i, visited);
 		}
 	}
 }
@@ -89,7 +81,7 @@ int main()
 	for (int i = 0; i < n; ++i)
 	{
 		vector<int> visited(n);
-		dfs(i, i, visited, true);
+		dfs(i, i, visited);
 	}
 
 	PrintVec(map);
