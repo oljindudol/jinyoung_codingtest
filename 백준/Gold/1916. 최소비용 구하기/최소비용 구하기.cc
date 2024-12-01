@@ -2,12 +2,59 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
 
 using namespace std;
 
-#define INF 1000000001
+template <typename T>
+void PrintVec(const vector<T>& vec)
+{
+	for (const auto& e : vec)
+	{
+		cout << e << " ";
+	}
+	cout << '\n';
+}
+
+
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
+#define INF 2e9
+int n, m;
+int s, e;
 
 struct edge
+{
+	int to;
+	int w;
+};
+
+struct node
 {
 	int to;
 	int w;
@@ -21,53 +68,73 @@ struct cmp
 	}
 };
 
-int main()
+struct cmp2
 {
-	int vcnt, ecnt;
-
-	cin >> vcnt >> ecnt;
-	vcnt++;
-	vector<vector<edge>> edges(vcnt, vector<edge>());
-
-	for (int i = 0; i < ecnt; ++i)
+	bool operator()(const node& a, const node& b)
 	{
-		int f, t, w;
-		cin >> f >> t >> w;
-		edges[f].push_back({ t,w });
+		return a.w > b.w;
 	}
+};
 
-	int start, end;
-	cin >> start >> end;
+vector<vector<edge>> edges;
 
-	//다익스트라
-	vector<int> dp(vcnt, INF);
-	priority_queue<edge, vector<edge>, cmp> pq;
+void daikustra(int from, int to)
+{
+	vector<int> dp(n + 1, INF);
 
-	dp[start] = 0;
-	pq.push({ start,0 });
+	priority_queue <node, vector<node>, cmp2> pq;
+
+	dp[from] = 0;
+	pq.push({ from,0 });
+
 	while (false == pq.empty())
 	{
-		edge cur = pq.top();
+		auto cur = pq.top();
 		pq.pop();
-		int routidx = cur.to;
-		int routw = cur.w;
 
-		if (dp[routidx] < routw)
+		if (dp[cur.to] < cur.w)
 		{
 			continue;
 		}
 
-		for (auto& e : edges[routidx])
+		for (const auto& e : edges[cur.to])
 		{
-			int newdist = dp[routidx] + e.w;
-			if (dp[e.to] > newdist)
+			int neww = cur.w + e.w;
+			if (dp[e.to] > neww)
 			{
-				dp[e.to] = newdist;
-				pq.push({ e.to,newdist });
+				dp[e.to] = neww;
+				pq.push({ e.to,neww });
 			}
 		}
 	}
 
-	cout << dp[end];
+	cout << dp[to];
+}
+
+
+
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	cin >> n >> m;
+
+	edges.resize(n + 1);
+
+	int f, t, w;
+	while (m--)
+	{
+		cin >> f >> t >> w;
+		edges[f].push_back({ t,w });
+	}
+
+
+	cin >> s >> e;
+
+	daikustra(s, e);
+
 	return 0;
 }
