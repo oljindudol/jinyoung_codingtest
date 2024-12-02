@@ -72,8 +72,7 @@ int main()
 		auto pdp = dp;
 		for (int w = i.w; w < k + 1; ++w)
 		{
-			int neww = w - i.w;
-			int newv = pdp[neww] + i.v;
+			int newv = pdp[w - i.w] + i.v;
 			dp[w] = max(pdp[w], newv);
 		}
 	}
