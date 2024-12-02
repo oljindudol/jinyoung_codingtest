@@ -9,6 +9,12 @@
 #include <unordered_map>
 #include <ostream>
 #include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
 
 using namespace std;
 
@@ -19,7 +25,7 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 
@@ -32,96 +38,63 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 /////////////////////////////////////////////
-
-#define INF 200001
-
 struct node
 {
-	int to;
-	int w;
+	int pos;
+	int depth;
 };
 
 struct cmp
 {
-	bool operator() (const node& a, const node& b)
+	bool operator()(const node& a, const node& b)
 	{
-		return a.w > b.w;
+		return a.depth > b.depth;
 	}
 };
-
-
-vector<long long> dp;
-bool IsVaild(int pos)
-{
-	if (0 > pos || INF < pos)
-	{
-		return false;
-	}
-	return true;
-}
 
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
+	int n, m;
+	cin >> n >> m;
 
-	int s, d;
-
-	cin >> s >> d;
-	dp.resize(INF + 1, INF);
+	vector<int> visited(1e5 + 1);
 	priority_queue<node, vector<node>, cmp> pq;
-
-	pq.push({ s,0 });
-	dp[s] = 0;
+	visited[n] = 1;
+	pq.push({ n,0 });
 
 	while (false == pq.empty())
 	{
 		auto cur = pq.top();
 		pq.pop();
-		int curidx = cur.to;
-		int curw = cur.w;
+		//cout << cur.depth << ' ' << cur.pos << '\n';
 
-		if (INF == curw)
-		{
-			continue;
-		}
+		visited[cur.pos] = 1;
 
-		if (d == curidx)
+		if (m == cur.pos)
 		{
+			cout << cur.depth;
 			break;
 		}
 
-		node newnode[3];
-		newnode[0].to = curidx + 1;
-		newnode[0].w = curw + 1;
-
-		newnode[1].to = curidx - 1;
-		newnode[1].w = curw + 1;
-
-		newnode[2].to = curidx * 2;
-		newnode[2].w = curw;
+		int npos[3] = { cur.pos - 1,cur.pos + 1 , cur.pos * 2 };
 
 		for (int i = 0; i < 3; ++i)
 		{
-			if (false == IsVaild(newnode[i].to))
+			if (npos[i] <= 100000 && npos[i] >= 0 && 1 != visited[npos[i]])
 			{
-				continue;
-			}
-			if (dp[newnode[i].to] > newnode[i].w)
-			{
-				dp[newnode[i].to] = newnode[i].w;
-				pq.push(newnode[i]);
+				int newdepth = (2 == i) ? cur.depth : cur.depth + 1;
+				pq.push({ npos[i],newdepth });
 			}
 		}
 	}
-
-	cout << dp[d];
 	return 0;
 }
