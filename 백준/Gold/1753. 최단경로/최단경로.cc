@@ -2,37 +2,59 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <set>
+#include <cmath>
+#include <string>
+#include <stdio.h>
+#include <unordered_map>
+#include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+//#include "semaphore.h"
+#include <semaphore>
 
 using namespace std;
 
-#define INT_MAX 200001
+template <typename T>
+void PrintVec(const vector<T>& vec)
+{
+	for (const auto& e : vec)
+	{
+		cout << e << " ";
+	}
+	cout << '\n';
+}
 
-//int FindMinWieghtIdx(const vector<int>& w, const vector<bool>& v)
-//{
-//	int minidx = -1;
-//	int minw = INT_MAX;
-//	int sz = w.size();
-//	for (int i = 0; i < sz; ++i)
-//	{
-//		if (false == v[i])
-//		{
-//			if (minw > w[i])
-//			{
-//				minidx = i;
-//				minw = w[i];
-//			}
-//		}
-//	}
-//
-//	return minidx;
-//}
+
+template <typename T>
+void PrintVec(const vector<vector<T>>& vec)
+{
+	for (const auto& e1 : vec)
+	{
+		for (const auto& e2 : e1)
+		{
+			cout << e2 << " ";
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+/////////////////////////////////////////////
+int vcnt, ecnt;
+int	a1, a2;
+vector<int> dp;
+int s;
 
 struct edge
 {
 	int to;
 	int w;
-
-
 };
 
 struct cmp
@@ -43,71 +65,73 @@ struct cmp
 	}
 };
 
+vector<vector<edge>> edges;
+#define INF 2e9 +1
 
+void daiku(int start)
+{
+
+	dp[start] = 0;
+	priority_queue<edge, vector<edge>, cmp> q;
+	q.push({ start,0 });
+
+
+	while (false == q.empty())
+	{
+		auto cur = q.top();
+		q.pop();
+
+		if (dp[cur.to] < cur.w)
+		{
+			continue;
+		}
+
+		for (const auto& to : edges[cur.to])
+		{
+			int neww = cur.w + to.w;
+			if (dp[to.to] > neww)
+			{
+				dp[to.to] = neww;
+				q.push({ to.to,neww });
+			}
+		}
+	}
+}
 
 int main()
 {
-	int vcnt, edgecnt, start;
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
 
-	cin >> vcnt >> edgecnt >> start;
+	cin >> vcnt >> ecnt;
+	cin >> s;
+	edges.resize(vcnt + 1);
 
-	++vcnt;
-
-	vector<vector<edge>> edges(vcnt);
-	vector<bool> visited(vcnt, false);
-	vector<int> dp = vector<int>(vcnt, INT_MAX);
-
-	priority_queue<edge, vector<edge>, cmp > test;
-	for (int i = 0; i < edgecnt; ++i)
+	int f, t, w;
+	while (ecnt--)
 	{
-		int u, v, w;
-		cin >> u >> v >> w;
+		cin >> f >> t >> w;
 
-		edges[u].push_back({ v,w });
-		test.push({ v,w });
+		edges[f].push_back({ t,w });
+		//edges[t].push_back({ f,w });
 	}
 
+	dp.resize(vcnt + 1, INF);
 
-	priority_queue<edge, vector<edge>, cmp > pq;
+	daiku(s);
 
-	visited[0] = true;
-	visited[start] = true;
-	dp[start] = 0;
-
-	pq.push({ start,0 });
-
-	while (false == pq.empty())
+	for (int i = 1; i < vcnt + 1; ++i)
 	{
-		edge cur = pq.top();
-		int routidx = cur.to;
-		int routw = cur.w;
-
-		//for (int i = 0; i < edges[routidx].size(); ++i)
-		for (auto& e : edges[routidx])
+		if (dp[i] == INF)
 		{
-			int newtoidx = e.to;
-			int newcost = dp[routidx] + e.w;
-			if (dp[newtoidx] > newcost)
-			{
-				dp[newtoidx] = newcost;
-				pq.push({ newtoidx, newcost });
-			}
-		}
-		pq.pop();
-	}
+			cout << "INF ";
 
-
-	for (int i = 1; i < vcnt; ++i)
-	{
-		if (INT_MAX == dp[i])
-		{
-			cout << "INF" << endl;
 		}
 		else
 		{
-			cout << dp[i] << endl;
+			cout << dp[i] << ' ';
 		}
 	}
-
 	return 0;
 }
