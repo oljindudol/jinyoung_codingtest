@@ -8,6 +8,15 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <ostream>
+#include <stack>
+#include <unordered_set>
+#include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+//#include "semaphore.h"
+#include <semaphore>
 
 using namespace std;
 
@@ -18,7 +27,7 @@ void PrintVec(const vector<T>& vec)
 	{
 		cout << e << " ";
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 
@@ -31,37 +40,30 @@ void PrintVec(const vector<vector<T>>& vec)
 		{
 			cout << e2 << " ";
 		}
-		cout << endl;
+		cout << '\n';
 	}
-	cout << endl;
+	cout << '\n';
 }
 
 /////////////////////////////////////////////
+#define INF 1e9+1
+vector<vector<int>> map;
+int n;
 
-
-
-struct edge
+void fw()
 {
-	int to;
-	int w;
-};
-
-#define INF 1000000001
-
-
-void fw(vector<vector<int>>& dp, int n)
-{
-	for (int k = 1; k < n + 1; ++k)
+	for (int i = 1; i < n + 1; ++i)
 	{
-		for (int i = 1; i < n + 1; ++i)
+		for (int row = 1; row < n + 1; ++row)
 		{
-			for (int j = 1; j < n + 1; ++j)
+			for (int col = 1; col < n + 1; ++col)
 			{
-				int neww = dp[i][k] + dp[k][j];
-				if (dp[i][j] > neww)
-				{
-					dp[i][j] = neww;
-				}
+				//if (INF == map[row][i] || INF == map[i][col])
+				//{
+				//	continue;
+				//}
+
+				map[row][col] = min(map[row][col], map[row][i] + map[i][col]);
 			}
 		}
 	}
@@ -70,46 +72,47 @@ void fw(vector<vector<int>>& dp, int n)
 
 int main()
 {
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
-	int n, m;
-	cin >> n >> m;
+	cin >> n;
+	map.resize(n + 1, vector<int>(n + 1, INF));
 
-	vector<vector<int>> dp(n + 1, vector<int>(n + 1, INF));
-
+	int ecnt;
+	cin >> ecnt;
 	int f, t, w;
-
-	for (int i = 0; i < m; ++i)
+	while (ecnt--)
 	{
 		cin >> f >> t >> w;
-
-		//dp[f][t] = w;
-		dp[f][t] = min(dp[f][t], w);
+		map[f][t] = min(map[f][t], w);
 	}
+
 
 	for (int i = 0; i < n + 1; ++i)
 	{
-		dp[i][i] = 0;
+		map[i][i] = 0;
 	}
 
-	fw(dp, n);
+
+	fw();
 
 	for (int row = 1; row < n + 1; ++row)
 	{
 		for (int col = 1; col < n + 1; ++col)
 		{
-			if (INF == dp[row][col])
+			if (INF == map[row][col])
 			{
-				printf("0 ");
+				cout << "0 ";
 			}
 			else
 			{
-				printf("%d ", dp[row][col]);
+				cout << map[row][col] << ' ';
 			}
 		}
-		printf("\n");
+		cout << '\n';
 	}
+
 
 	return 0;
 }
