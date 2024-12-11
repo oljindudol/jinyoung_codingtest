@@ -94,9 +94,15 @@ void polution()
 {
 	//외부공기
 	queue<pos> q;
-	q.push({ 0,0 });
 	vector<vector<int>> visited(n, vector<int>(m));
+	q.push({ 0,0 });
+	q.push({ n - 1,0 });
+	q.push({ 0,m - 1 });
+	q.push({ n - 1,m - 1 });
 	visited[0][0] = 1;
+	visited[n - 1][0] = 1;
+	visited[0][m - 1] = 1;
+	visited[n - 1][m - 1] = 1;
 	while (false == q.empty())
 	{
 		auto cur = q.front();
