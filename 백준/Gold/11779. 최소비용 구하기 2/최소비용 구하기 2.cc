@@ -58,7 +58,8 @@ struct node
 {
 	int t;
 	int w;
-	vector<int> path;
+	string path;
+	int depth;
 };
 
 struct cmp
@@ -69,8 +70,8 @@ struct cmp
 	}
 };
 
-vector<int> ret;
-
+string ret;
+int retdepth;
 void daiku(int from, int to)
 {
 	vector<int> dp(n + 1, INF);
@@ -78,7 +79,7 @@ void daiku(int from, int to)
 	priority_queue<node, vector<node>, cmp> pq;
 	vector<int> initpath;
 	initpath.push_back(from);
-	pq.push({ from,0,initpath });
+	pq.push({ from,0,to_string(from),1 });
 
 	while (false == pq.empty())
 	{
@@ -93,17 +94,16 @@ void daiku(int from, int to)
 		if (to == cur.t)
 		{
 			ret = cur.path;
+			retdepth = cur.depth;
 		}
 
 		for (const auto& to : edges[cur.t])
 		{
 			int neww = cur.w + to.w;
-			auto newvec = cur.path;
 			if (dp[to.t] > neww)
 			{
 				dp[to.t] = neww;
-				newvec.push_back(to.t);
-				pq.push({ to.t,neww,newvec });
+				pq.push({ to.t,neww,cur.path + ' ' + to_string(to.t),cur.depth + 1 });
 			}
 		}
 	}
@@ -127,7 +127,7 @@ int main()
 	cin >> s >> e;
 
 	daiku(s, e);
-	cout << ret.size() << ' ';
-	PrintVec(ret);
+	cout << retdepth << ' ';
+	cout << ret << ' ';
 	return 0;
 }
