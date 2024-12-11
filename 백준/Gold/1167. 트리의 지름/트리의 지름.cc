@@ -114,19 +114,8 @@ int main()
 		}
 	}
 
-	//for (int i = 1; i < n + 1; ++i)
-	//{
-	//	visited.resize(0);
-	//	visited.resize(n + 1);
-	//	visited[i] = 1;
-	//	dfs(i);
-	//}
 	visited[1] = 1;
 	dfs(1);
-	//visited.resize(0);
-	//visited.resize(n + 1);
-	//visited[1] = 2;
-	//dfs(2);
 
 	cout << ret;
 
