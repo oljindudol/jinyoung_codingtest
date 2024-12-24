@@ -1,58 +1,95 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
-
-bool sortgen(pair<string,int>& p1, pair<string,int>& p2)
+struct music
 {
-    return p1.second > p2.second;
+    int idx;
+    string genre;
+    int plays;
+    int sp;
+};
+
+bool cmp(const music& a,const music& b)
+{
+    if(a.sp == b.sp)
+    {
+        if(a.plays == b.plays)
+        {
+            return a.idx<b.idx;
+        }
+        return a.plays>b.plays;
+    }
+    return a.sp>b.sp;
 }
 
-bool sortplay(pair<int,int>& p1,pair<int,int>& p2)
-{
-    return p1.second > p2.second;
-}
+// struct g
+// {
+//     int genre;
+//     int plays;
+// }
+
+// bool gcmp(const g& a,const g& b)
+// {
+//     return 
+// }
+
 
 vector<int> solution(vector<string> genres, vector<int> plays) {
     vector<int> answer;
-    //장르,총재생수
-    unordered_map<string,int> umgenres;
-    //장르, 고유번호,재생수
-    unordered_map<string,vector<pair<int,int>>> uminfo;
     
-    for(size_t i = 0 ; i < genres.size();++i)
+    unordered_map<string,int> um;
+    int sz = genres.size();
+    vector<music> vm(sz);
+    
+    for(int i =0 ; i < sz;++i)
     {
-        umgenres[genres[i]] += plays[i];
+        vm[i].idx = i;
+        vm[i].genre = genres[i];
+        vm[i].plays = plays[i];
         
-        uminfo[genres[i]].push_back({i,plays[i]});
+        um[genres[i]]+= plays[i];
     }
     
-    vector<pair<string,int>> vecgenres;
-    for(auto& e: umgenres)
+    for(auto& e: vm)
     {
-        vecgenres.push_back({e.first,e.second});
+       e.sp = um[e.genre];
     }
     
-    sort(vecgenres.begin(),vecgenres.end(),sortgen);
+    string prev = "";
+    int cnt = 0;
     
-    for(auto& e: uminfo)
+    sort(vm.begin(),vm.end(),cmp);
+    for(const auto& e: vm)
     {
-        sort(e.second.begin(),e.second.end(),sortplay);
-    }
-    
-    
-    for(auto& e : vecgenres)
-    {
+        if(2 == cnt)
+        {
+            if(prev != e.genre)
+            {
+                prev = e.genre;
+                cnt = 1;
+                answer.push_back(e.idx);
+            }
+            continue;
+        }
         
-        answer.push_back( uminfo[e.first][0].first);
-        
-        if(1<uminfo[e.first].size())
-            answer.push_back( uminfo[e.first][1].first);
-            
+        if(prev == e.genre)
+        {
+            ++cnt;
+            answer.push_back(e.idx);
+            prev = e.genre;
+        }
+        else
+        {
+            cnt = 1;
+            answer.push_back(e.idx);
+            prev = e.genre;
+        }
     }
+    
     
     return answer;
 }
