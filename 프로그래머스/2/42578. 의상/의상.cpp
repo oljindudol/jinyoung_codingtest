@@ -9,18 +9,16 @@ int solution(vector<vector<string>> clothes) {
     
     unordered_map<string,int> um;
     
-    for(auto & e: clothes)
+    for(const auto& e:clothes)
     {
         ++um[e[1]];
     }
     
-    for(auto & e: um)
+    for(const auto&e: um)
     {
-        answer *= (e.second+1);
+        answer*=(e.second+1) ;
     }
     
-    //공집합의 갯수 빼주기
     --answer;
-    
     return answer;
 }
