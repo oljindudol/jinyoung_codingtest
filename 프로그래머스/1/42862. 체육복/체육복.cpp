@@ -1,55 +1,68 @@
 #include <string>
 #include <vector>
-#include <iostream>
 #include <algorithm>
 
 using namespace std;
 
 int solution(int n, vector<int> lost, vector<int> reserve) {
+    int answer = 0;
+    int lostcnt = lost.size();
+    vector<int> spare(n+1);
+    vector<int> losts(n+1);
     
-    
-    for(auto iter1 =lost.begin(); iter1<lost.end();)
-    {
-        bool dirty =false;
-        for(auto iter2 = reserve.begin();iter2<reserve.end();)
-        {
-            if(*iter1 ==*iter2)
-            {
-                iter1 = lost.erase(iter1);
-                iter2 = reserve.erase(iter2);
-            }
-            else
-            {
-                ++iter2;
-            }
-        }
-        if(false == dirty)
-            ++iter1;
-    }
-    
-    int answer = n-lost.size();
     sort(lost.begin(),lost.end());
     sort(reserve.begin(),reserve.end());
     
-    int pnt = 0;
-    for(int i =0;i<lost.size();++i)
+    
+    for(const auto& e: reserve)
     {
-        
-        for(int j=pnt;j<reserve.size();++j)
+        spare[e] = 1;
+    }
+    for(const auto& e: lost)
+    {
+        losts[e] = 1;
+    }
+    // for(const auto& e: lost)
+    // {
+    //     if(1 == spare[e])
+    //     {
+    //         --lostcnt;
+    //         spare[e]=0;
+    //     }
+    // }
+    
+    for(const auto& e: lost)
+    {
+        if(1==spare[e])
         {
-            if(lost[i]+1<reserve[j])
-            {
-                break;
-            }
-            if(2 > abs(lost[i]-reserve[j]))
-            {
-                pnt =j+1;
-                ++answer;
-                break;
-            }
+            --lostcnt;
+            spare[e] = 0;
+            continue;
         }
+        if(1==spare[e-1] && 0 == losts[e-1])
+        {
+            --lostcnt;
+            spare[e-1] = 0;
+            continue;
+        }
+        if(1==spare[e+1]&& 0 == losts[e+1])
+        {
+            --lostcnt;
+            spare[e+1] = 0;
+        }
+        // if(1== spare[e-1])
+        // {
+        //     --lostcnt;
+        //     spare[e-1] = 0;
+        //     continue;
+        // }
+        // if(1== spare[e+1])
+        // {
+        //     --lostcnt;
+        //     spare[e+1] = 0;
+        // }
     }
     
-    
+    answer = n-lostcnt;
     return answer;
 }
