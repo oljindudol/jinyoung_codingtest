@@ -1,85 +1,56 @@
 #include <string>
 #include <vector>
-#include <unordered_set>
 #include <iostream>
 
 using namespace std;
 
-struct pos
-{
-    int row;
-    int col;
-};
-
-int maxrow;
-int maxcol;
-
-bool IsPuddle(int row,int col,vector<vector<int>>& puddles)
-{
-    for(const auto& e: puddles)
-    {
-        if(col == e[0]-1 && row == e[1]-1)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-
 int solution(int m, int n, vector<vector<int>> puddles) {
     int answer = 0;
+    vector<vector<int>> map(m,vector<int>(n,0));
     
-    maxrow = n;
-    maxcol = m;
-    
-//    vector<vector<int>> pm(n,vector<int>(m,0));
-    
-//     for(auto& e:puddles)
-//     {
-//         pm[e[0]][e[1]] = 1;
-//     }
-    
-    vector<long long> dp(m,0);
-    // dp[0] = 1;
-    for(int row=0;row<n; ++row)
+    for(const auto e:puddles)
     {
-        for(int col=0;col<m;++col)
-        {
-            if(true == IsPuddle(row,col,puddles))
-            {
-                dp[col] = 0;
-                continue;
-            }
-            
-            if(0 == row && 0 == col)
-            {
-                dp[col] = 1;
-                continue;
-            }
-            if(0 == row && 0 != col)
-            {
-                dp[col] = dp[col-1];
-                continue;
-            }
-            if(0 != row && 0 == col)
-            {
-                dp[col] = dp[col];
-                continue;
-            }
-            if(0 != row && 0 != col)
-            {
-                dp[col] = dp[col]+dp[col-1]%1000000007;
-                continue;
-            }
-        }
-        
-        // for(auto& e: dp)
-        // {
-        //     cout<<e<<",";
-        // }
-        // cout<<endl;
+        map[e[0]-1][e[1]-1] = -1;
     }
     
-    return dp[m-1]%1000000007;
+    map[0][0]=1;
+    
+    for(int row=0;row<m;++row)
+    {
+        for(int col = 0 ;col<n;++col)
+        {
+            if(-1 == map[row][col])
+            {
+                continue;
+            }
+            if(0 != row && -1 != map[row-1][col])
+            {
+                map[row][col] = map[row-1][col];
+            }
+            if(0 != col && -1 != map[row][col-1])
+            {
+                if(-1 == map[row][col])
+                {
+                    map[row][col] = map[row][col-1];
+                }
+                else
+                {
+                    map[row][col] += map[row][col-1];
+                    map[row][col] = map[row][col]%1000000007;
+                }
+            }
+        }
+    }
+    
+    // for(const auto& r:map)
+    // {
+    //     for(const auto& c:r)
+    //     {
+    //         cout<< c<< ' ';
+    //     }
+    //     cout<<'\n';
+    // }
+    
+    
+    return map[m-1][n-1];
 }
