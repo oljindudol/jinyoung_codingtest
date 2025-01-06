@@ -1,42 +1,40 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <iostream>
 
 using namespace std;
 
 int solution(int n, vector<vector<int>> computers) {
     int answer = 0;
-    
     int sz = computers.size();
+    vector<int> visited(sz);
     
-    // vector<vector<int>> visited(vector<int>(false,m),n);
-    vector<bool> visited(sz,false);
-    
-    queue<int> q;
-
-    for(int i=0;i<sz;++i)
+    for(int i = 0 ; i < sz;++i)
     {
-        if(true == visited[i])
+        if(1 == visited[i])
+        {
             continue;
-        
-        visited[i]=true;
+        }
         ++answer;
-        cout<<i<<endl;
+        visited[i] = 1;
+        queue<int> q;
         q.push(i);
+        
         while(false == q.empty())
         {
-            int newidx = q.front();
+            int cur = q.front();
             q.pop();
-            for(int j=0;j<sz;++j)
+            
+            for(int to = 0 ;to<sz;++to)
             {
-                if(false == visited[j] && 1 == computers[newidx][j])
+                if(1 == computers[cur][to] && 0== visited[to])
                 {
-                    visited[j]=true;
-                    q.push(j);
+                    visited[to] =1;
+                    q.push(to);
                 }
             }
         }
+        
     }
     
     return answer;
