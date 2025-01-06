@@ -1,91 +1,65 @@
 #include<vector>
 #include <queue>
-#include <iostream>
 
 using namespace std;
+int drow[4] = {1,-1,0,0};
+int dcol[4] = {0,0,1,-1};
+int r,c;
 
-int maxrow;
-int maxcol;
-
-bool IsValid(int row,int col,const vector<vector<int> >& maps)
+bool IsValid(int row,int col,const vector<vector<int>>& map)
 {
-    if(0> row || maxrow<= row)
+    if(0>row || r<=row)
     {
         return false;
     }
-    
-    if(0>col || maxcol <= col)
+    if(0>col || c<=col)
     {
         return false;
     }
-    
-    if(0 == maps[row][col])
+    if(0==map[row][col])
     {
         return false;
     }
-    
     return true;
 }
 
 struct node
 {
-    int depth;
     int row;
     int col;
+    int depth;
 };
-
-int drow[4]= {0,0,1,-1};
-int dcol[4]={1,-1,0,0};
-
-
-
 int solution(vector<vector<int> > maps)
 {
-    int answer = -1;
-    maxrow = maps.size();
-    maxcol = maps[0].size();
+    int answer = 0;
+    r= maps.size();
+    c= maps[0].size();
+    
     queue<node> q;
-    
-    // for(int row =0; row<maxrow;++row)
-    // {
-    //     for(int col=0;col<maxcol;++col)
-    //     {
-    
-    q.push({1,0,0});
+    q.push({0,0,1});
     
     while(false == q.empty())
     {
-        auto curnode = q.front();
+        auto cur = q.front();
         q.pop();
-        int currow = curnode.row;
-        int curcol = curnode.col;
-        
-        if(false == IsValid(currow,curcol,maps))
+        if(r-1 == cur.row && c-1==cur.col)
         {
-            continue;
-        }
-        maps[currow][curcol]=0;
-        
-        
-        if(currow ==maxrow-1 && curcol == maxcol-1)
-        {
-            answer = curnode.depth;
-            break;
+            return cur.depth;
         }
         
-        for(int i = 0;i<4;++i)
+        for(int i = 0 ; i < 4;++i)
         {
-            int newrow = currow+ drow[i];
-            int newcol = curcol + dcol[i];
-            q.push({curnode.depth+1,newrow,newcol});
+            int nrow = cur.row+drow[i];
+            int ncol = cur.col+dcol[i];
+            
+            if(true == IsValid(nrow,ncol,maps))
+            {
+                maps[nrow][ncol] = 0;
+                q.push({nrow,ncol,cur.depth+1});
+            }
         }
     }
-
-            
-            
-            
-    //     }
-    // }
     
-    return answer;
+    
+    return -1;
 }
