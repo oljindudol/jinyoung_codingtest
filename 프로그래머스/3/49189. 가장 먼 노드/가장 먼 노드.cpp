@@ -37,10 +37,10 @@ int daikustra(int from)
         auto cur = pq.top();
         pq.pop();
         
-        // if(dp[cur.t] < cur.w)
-        // {
-        //     continue;
-        // }
+        if(dp[cur.t] < cur.w)
+        {
+            continue;
+        }
         
         for(const auto& to: edges[cur.t])
         {
