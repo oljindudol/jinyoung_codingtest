@@ -11,6 +11,11 @@
 #include <stack>
 #include <unordered_set>
 #include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+#include <assert.h>
 
 using namespace std;
 
@@ -40,28 +45,17 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
-constexpr int INF = 1e3 + 1;
-vector<bool> IsPrime;
-
-void init()
+int getG(int n)
 {
-	IsPrime.resize(INF, true);
+	int ret = n;
 
-	IsPrime[0] = false;
-	IsPrime[1] = false;
-
-	for (int i = 2; i < INF; ++i)
+	while (0 != n)
 	{
-		if (false == IsPrime[i])
-		{
-			continue;
-		}
-
-		for (int j = i * i; j < INF; j += i)
-		{
-			IsPrime[j] = false;
-		}
+		ret += (n % 10);
+		n = n / 10;
 	}
+
+	return ret;
 }
 
 int main()
@@ -69,32 +63,23 @@ int main()
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-
 	int n;
 	cin >> n;
 
-	//vector<int> dp(n + 1);
+	//vector<int> dp(200000);
 
-
-	for (int i = 0; i < n + 1; ++i)
+	for (int i = 1; i < n + 1; ++i)
 	{
+		int res = getG(i);
+		//cout << i << ' ' << res << '\n';
 
-		string s = to_string(i);
-		int newnum = i;
-
-		for (const auto& e : s)
-		{
-			newnum += (e - '0');
-		}
-
-		if (newnum == n)
+		if (n == res)
 		{
 			cout << i;
 			return 0;
 		}
 	}
-
 	cout << 0;
+
 	return 0;
 }
-
