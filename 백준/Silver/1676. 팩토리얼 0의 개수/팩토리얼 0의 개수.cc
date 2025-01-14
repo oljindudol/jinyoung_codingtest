@@ -11,6 +11,11 @@
 #include <stack>
 #include <unordered_set>
 #include <sstream>
+#include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+#include <assert.h>
 
 using namespace std;
 
@@ -40,35 +45,18 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
-bool cmp(const string& a, const string& b)
-{
-	if (a.length() == b.length())
-	{
-		return a < b;
-	}
-	return a.length() < b.length();
-}
+int n;
+int ret = 0;
 
-bool IsApo(int i)
+int count5(int num)
 {
-	int succe = 0;
-	string s = to_string(i);
-	for (const auto& e : s)
+	int ret = 0;
+	while (0 != num && 0 == num % 5)
 	{
-		if ('6' == e)
-		{
-			++succe;
-			if (3 == succe)
-			{
-				return true;
-			}
-		}
-		else
-		{
-			succe = 0;
-		}
+		num /= 5;
+		++ret;
 	}
-	return false;
+	return ret;
 }
 
 int main()
@@ -77,40 +65,12 @@ int main()
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	long long n;
-
 	cin >> n;
 
-	if (0 == n)
+	for (int i = 1; i <= n; ++i)
 	{
-		cout << 0;
-		return 0;
+		ret += count5(i);
 	}
-
-	int cnt2 = 0;
-	int cnt5 = 0;
-	while (n)
-	{
-		int n2 = n;
-		int n5 = n;
-
-		while (0 == n2 % 2)
-		{
-			++cnt2;
-			n2 = n2 / 2;
-		}
-
-		while (0 == n5 % 5)
-		{
-			++cnt5;
-			n5 = n5 / 5;
-		}
-		--n;
-	}
-
-
-
-	cout << min(cnt2, cnt5);
-
+	cout << ret;
 	return 0;
 }
