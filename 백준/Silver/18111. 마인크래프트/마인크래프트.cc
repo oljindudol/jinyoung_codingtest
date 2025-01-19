@@ -12,6 +12,10 @@
 #include <unordered_set>
 #include <sstream>
 #include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+#include <assert.h>
 
 using namespace std;
 
@@ -41,90 +45,79 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
-vector<vector<long long>> map;
-long long maxrow, maxcol, b;
-long long blockcnt;
-long long sum;
-constexpr long long subtime = 2;
-constexpr long long addtime = 1;
+int r, c, b;
+int bcnt;
+int bsum = 0;
+constexpr int INF = 1e9;
+vector<vector<int>> map;
 
-long long IsPossible(long long targetheight)
+//true일경우 시간출력
+int getTime(int target)
 {
-	if (sum + b < targetheight * blockcnt)
+	if ((bsum + b) < bcnt * target)
 	{
-		return 2e9 + 1;
+		return INF;
 	}
-	long long time = 0;
-
-	for (int row = 0; row < maxrow; ++row)
+	int time = 0;
+	for (int row = 0; row < r; ++row)
 	{
-		for (int col = 0; col < maxcol; ++col)
+		for (int col = 0; col < c; ++col)
 		{
-			long long needwork = targetheight - map[row][col];
-			if (0 > needwork)
+			int diff = target - map[row][col];
+			if (0 == diff)
 			{
-				time += (-needwork * subtime);
+				continue;
+			}
+			// target이 커서 블록을 쌓아야하는경우
+			else if (0 < diff)
+			{
+				time += diff;
 			}
 			else
 			{
-				time += (needwork * addtime);
+				time += (abs(diff) * 2);
 			}
 		}
 	}
 	return time;
 }
 
+
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
+	cin >> r >> c >> b;
+	bcnt = r * c;
+	map.resize(r, vector<int>(c));
 
-	cin >> maxrow >> maxcol >> b;
-	blockcnt = maxrow * maxcol;
-	map.resize(maxrow, vector<long long>(maxcol));
-
-	for (int row = 0; row < maxrow; ++row)
+	for (int row = 0; row < r; ++row)
 	{
-		for (int col = 0; col < maxcol; ++col)
+		for (int col = 0; col < c; ++col)
 		{
 			cin >> map[row][col];
-			sum += map[row][col];
+			bsum += map[row][col];
 		}
 	}
 
-	long long left = sum / blockcnt;
-	long long right = (sum + b) / blockcnt + 1;
-	long long rettime = 2e9 + 1;
-
-	for (long long i = right; 0 <= i; --i)
+	int minres = INF;
+	vector<int> ress(257);
+	for (int i = 0; i < 257; ++i)
 	{
-		long long can = IsPossible(i);
-		//cout << can << " " << right << "\n";
-		if (rettime > can)
-		{
-			rettime = can;
-			right = i;
-		}
+		ress[i] = getTime(i);
+		minres = min(minres, ress[i]);
 	}
 
-	//while (left <= right)
-	//{
-	//	long long mid = left + (right - left) / 2;
-	//	auto res = IsPossible(mid);
-
-	//	if (rettime >= res)
-	//	{
-	//		left = mid + 1;
-	//		rettime = res;
-	//	}
-	//	else
-	//	{
-	//		right = mid - 1;
-	//	}
-	//}
-
-	cout << rettime << " " << right;
+	cout << minres << ' ';
+	for (int i = 256; i >= 0; --i)
+	{
+		if (minres == getTime(i))
+		{
+			cout << i;
+			return 0;
+		}
+	}
 
 	return 0;
 }
