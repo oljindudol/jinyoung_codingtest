@@ -12,6 +12,10 @@
 #include <unordered_set>
 #include <sstream>
 #include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+#include <assert.h>
 
 using namespace std;
 
@@ -41,6 +45,51 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
+bool IsValid(const string& s)
+{
+	stack<char> st;
+
+	for (const auto& e : s)
+	{
+		if ('[' == e)
+		{
+			st.push('[');
+		}
+		else if (']' == e)
+		{
+			if (true == st.empty() || '[' != st.top())
+			{
+				return false;
+			}
+			else
+			{
+				st.pop();
+			}
+		}
+		else if ('(' == e)
+		{
+			st.push('(');
+		}
+		else if (')' == e)
+		{
+			if (true == st.empty() || '(' != st.top())
+			{
+				return false;
+			}
+			else
+			{
+				st.pop();
+			}
+		}
+	}
+
+	if (false == st.empty())
+	{
+		return false;
+	}
+
+	return true;
+}
 
 
 int main()
@@ -48,76 +97,24 @@ int main()
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
-
-	int n;
-
-	vector<string> vs;
 	string s;
-	char c;
-	stringstream ss;
 
 
 	while (true)
 	{
-		//cin >> s;
 		getline(cin, s);
 		if ("." == s)
 		{
 			break;
 		}
-
-		stack<char> stack;
-		bool ip = true;
-		for (const auto& e : s)
+		if (true == IsValid(s))
 		{
-			if ('(' == e)
-			{
-				stack.push(e);
-			}
-			else if (')' == e)
-			{
-				if (true == stack.empty())
-				{
-					ip = false;
-					break;
-				}
-				auto o = stack.top();
-				stack.pop();
-				if ('(' != o)
-				{
-					ip = false;
-					break;
-				}
-			}
-			else if ('[' == e)
-			{
-				stack.push(e);
-			}
-			else if (']' == e)
-			{
-				if (true == stack.empty())
-				{
-					ip = false;
-					break;
-				}
-				auto o = stack.top();
-				stack.pop();
-				if ('[' != o)
-				{
-					ip = false;
-					break;
-				}
-			}
-		}
-		if (false == ip || false == stack.empty())
-		{
-			cout << "no ";
+			cout << "yes" << '\n';
 		}
 		else
 		{
-			cout << "yes ";
+			cout << "no" << '\n';
 		}
-
 	}
 
 	return 0;
