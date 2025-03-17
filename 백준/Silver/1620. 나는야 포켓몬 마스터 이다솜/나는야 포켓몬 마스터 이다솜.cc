@@ -12,6 +12,10 @@
 #include <unordered_set>
 #include <sstream>
 #include <list>
+#include <thread>
+#include <omp.h>
+#include <mutex>
+#include <assert.h>
 
 using namespace std;
 
@@ -41,6 +45,22 @@ void PrintVec(const vector<vector<T>>& vec)
 }
 
 /////////////////////////////////////////////
+int n, tcnt;
+vector<string> names;
+unordered_map<string, int> um;
+
+bool IsName(const string& val)
+{
+	for (const auto& e : val)
+	{
+		if ('0' <= e && '9' >= e)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
 
 int main()
 {
@@ -48,51 +68,30 @@ int main()
 	cin.tie(NULL);
 	cout.tie(NULL);
 
+	cin >> n >> tcnt;
 
-	int n, m;
-	cin >> n >> m;
-
-	unordered_map<string, int> um1;
-	unordered_map<int, string> um2;
-
-	string s;
-
-	for (int i = 1; i < n + 1; ++i)
+	names.resize(n);
+	for (int i = 0; i < n; ++i)
 	{
-		cin >> s;
-		um1[s] = i;
-		um2[i] = s;
+		cin >> names[i];
+		um[names[i]] = i + 1;
 	}
 
-	const int i0 = '0';
-	const int i9 = '9';
-	while (m--)
-	{
-		cin >> s;
 
-		//if (true == isalpha(s[0]))
-		//if (false == (i0 <= s[0] && i9 >= s[0]))
-		//{
-		//	cout << um1[s] << " ";
-		//}
-		//else
-		//{
-		//	cout << um2[stoi(s)] << " ";
-		//}
-		if (i9 >= s[0])
+	string input;
+	while (tcnt--)
+	{
+		cin >> input;
+
+		if (true == IsName(input))
 		{
-			cout << um2[stoi(s)] << " ";
+			cout << um[input] << '\n';
 		}
 		else
 		{
-			cout << um1[s] << " ";
+			cout << names[stoi(input) - 1] << '\n';
 		}
-
 	}
-
-
-
-
 
 	return 0;
 }
