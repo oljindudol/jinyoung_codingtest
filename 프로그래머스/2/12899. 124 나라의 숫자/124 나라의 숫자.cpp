@@ -2,40 +2,28 @@
 #include <vector>
 #include <list>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
+vector<char> map;
+
 string solution(int n) {
     string answer = "";
-    list<char> l;
     
-    while(0 != n)
+    map.resize(3);
+    map[0]='1';
+    map[1]='2';
+    map[2]='4';
+    
+    while(n>0)
     {
-        int tmp = n%3;
-        if(1 == tmp)
-        {
-            l.push_front('1');
-        }
-        else if(2 == tmp)
-        {
-            l.push_front('2');
-        }
-        else
-        {
-            l.push_front('4');
-        }
+        --n;
+        int mok = n/3;
+        int mod = n%3;
         
-        n/=3;
-        if(0 == tmp)
-        {
-            n-=1;
-        }
-    }
-    
-    for(auto& e:l)
-    {
-        answer+=e;
-        // answer.push_back(e);
+        answer = map[mod]+answer;
+        n=mok;
     }
     
     return answer;
