@@ -8,12 +8,29 @@ int cnt = 0;
 string str = " AEIOU";
 string target;
 
+class FoundAnswerException : public exception
+{
+    private:
+    int m_cnt;
+    public:
+    void setCnt(int _cnt)
+    {
+        m_cnt=_cnt;
+    }
+    int getCnt() const
+    {
+    return m_cnt;
+    }
+    FoundAnswerException(int _cnt)
+    :m_cnt(_cnt){}
+};
+
 void dfs(int depth,string& cur,bool end)
 {
     if(target == cur)
     {
-        cout<<"found" <<cnt<<':'<<cur<<'\n';
-        throw exception();
+        // cout<<"found" <<cnt<<':'<<cur<<'\n';
+        throw FoundAnswerException(cnt);
     }
     else
     {
@@ -43,11 +60,11 @@ int solution(string word) {
     {
         dfs(0,cur,false);
     }
-    catch(const exception& e)
+    catch(const FoundAnswerException& e)
     {
-        
+        return e.getCnt();
     }
     
-    return cnt;
+    return -2;
     // return answer;
 }
